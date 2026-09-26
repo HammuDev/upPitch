@@ -11,7 +11,7 @@ interface HistoryDrawerProps {
   onLoadPitch: (item: HistoryItem) => void;
 }
 
-export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
+export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
   isOpen,
   onClose,
   history,
@@ -128,4 +128,6 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = ({
       </div>
     </div>
   );
-};
+});
+
+HistoryDrawer.displayName = 'HistoryDrawer';

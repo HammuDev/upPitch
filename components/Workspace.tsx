@@ -55,7 +55,7 @@ const TONES: { id: Tone; label: string; desc: string }[] = [
   { id: 'casual', label: 'Agile & High-Urgency', desc: 'Fast 24-48h turnaround execution pitch' },
 ];
 
-export const Workspace: React.FC<WorkspaceProps> = ({
+export const Workspace: React.FC<WorkspaceProps> = React.memo(({
   channel,
   setChannel,
   tone,
@@ -823,4 +823,6 @@ export const Workspace: React.FC<WorkspaceProps> = ({
       </div>
     </div>
   );
-};
+});
+
+Workspace.displayName = 'Workspace';

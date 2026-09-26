@@ -1,5 +1,5 @@
 'use strict';
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, memo } from 'react';
 
 const RULES = [
   'Rule 1 (160-Char Hook): First sentence must state root cause and fix before any general claims.',
@@ -10,7 +10,7 @@ const RULES = [
   'Rule 6 (Zero AI Fluff): Never open with "Dear Hiring Manager" or generic pleasantries.',
 ];
 
-export const RuleTicker: React.FC = () => {
+export const RuleTicker: React.FC = memo(() => {
   const [currentIdx, setCurrentIdx] = useState(0);
 
   useEffect(() => {
@@ -39,7 +39,7 @@ export const RuleTicker: React.FC = () => {
             {RULES.map((_, i) => (
               <span
                 key={i}
-                className={`h-1.5 w-1.5 rounded-full transition-all ${
+                className={`h-1.5 w-1.5 rounded-full transition-all duration-150 ${
                   i === currentIdx ? 'bg-indigo-400 w-3' : 'bg-slate-700'
                 }`}
               />
@@ -51,11 +51,13 @@ export const RuleTicker: React.FC = () => {
         <div className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] px-2.5 sm:px-3 py-1 text-[10px] text-slate-400 font-mono shrink-0">
           <span>Formula</span>
           <span className="font-bold text-indigo-300 flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 animate-ping" /> Top 1% Bids
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" /> Top 1% Bids
           </span>
         </div>
 
       </div>
     </div>
   );
-};
+});
+
+RuleTicker.displayName = 'RuleTicker';

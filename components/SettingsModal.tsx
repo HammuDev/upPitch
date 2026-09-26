@@ -7,7 +7,7 @@ interface SettingsModalProps {
   onClose: () => void;
 }
 
-export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose }) => {
+export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen, onClose }) => {
   const [apiKey, setApiKey] = useState('');
   const [isSaved, setIsSaved] = useState(false);
 
@@ -97,4 +97,6 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({ isOpen, onClose })
       </div>
     </div>
   );
-};
+});
+
+SettingsModal.displayName = 'SettingsModal';

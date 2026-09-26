@@ -10,7 +10,7 @@ interface AddProjectModalProps {
   onAdd: (project: ProjectItem) => void;
 }
 
-export const AddProjectModal: React.FC<AddProjectModalProps> = ({
+export const AddProjectModal: React.FC<AddProjectModalProps> = React.memo(({
   isOpen,
   onClose,
   onAdd,
@@ -128,4 +128,6 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = ({
       </div>
     </div>
   );
-};
+});
+
+AddProjectModal.displayName = 'AddProjectModal';

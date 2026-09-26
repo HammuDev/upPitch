@@ -1,5 +1,5 @@
 'use strict';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { Zap, ArrowRight, Copy, Check } from 'lucide-react';
 import { HistoryItem } from '@/types';
 
@@ -9,7 +9,7 @@ interface RecentPitchesProps {
   onLoadPitch: (item: HistoryItem) => void;
 }
 
-export const RecentPitches: React.FC<RecentPitchesProps> = ({
+export const RecentPitches: React.FC<RecentPitchesProps> = memo(({
   history,
   onOpenHistory,
   onLoadPitch,
@@ -39,7 +39,7 @@ export const RecentPitches: React.FC<RecentPitchesProps> = ({
           <button
             type="button"
             onClick={onOpenHistory}
-            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors duration-150"
           >
             <span>Open full history</span>
             <ArrowRight className="h-3 w-3" />
@@ -58,7 +58,7 @@ export const RecentPitches: React.FC<RecentPitchesProps> = ({
             {recentThree.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-white/[0.06] bg-[#070A14] p-3 sm:p-3.5 space-y-2 flex flex-col justify-between hover:border-indigo-500/40 transition-all shadow-2xs card-hover-lift"
+                className="rounded-xl border border-white/[0.06] bg-[#070A14] p-3 sm:p-3.5 space-y-2 flex flex-col justify-between hover:border-indigo-500/40 transition-colors duration-150 shadow-2xs"
               >
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
@@ -78,14 +78,14 @@ export const RecentPitches: React.FC<RecentPitchesProps> = ({
                   <button
                     type="button"
                     onClick={() => onLoadPitch(item)}
-                    className="cursor-pointer text-[11px] text-slate-400 hover:text-white font-medium transition-colors"
+                    className="cursor-pointer text-[11px] text-slate-400 hover:text-white font-medium transition-colors duration-150"
                   >
                     Load
                   </button>
                   <button
                     type="button"
                     onClick={() => handleCopy(item)}
-                    className={`cursor-pointer inline-flex items-center gap-1 rounded px-2.5 py-0.5 text-[11px] font-semibold transition-all ${
+                    className={`cursor-pointer inline-flex items-center gap-1 rounded px-2.5 py-0.5 text-[11px] font-semibold transition-all duration-150 ${
                       copiedId === item.id
                         ? 'bg-emerald-600 text-white shadow-xs'
                         : 'bg-white/[0.04] text-indigo-300 hover:bg-white/[0.08] hover:text-white'
@@ -103,4 +103,6 @@ export const RecentPitches: React.FC<RecentPitchesProps> = ({
       </div>
     </div>
   );
-};
+});
+
+RecentPitches.displayName = 'RecentPitches';

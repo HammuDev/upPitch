@@ -1,9 +1,9 @@
 'use strict';
-import React from 'react';
+import React, { memo } from 'react';
 import { Logo } from './Logo';
 import { ShieldCheck } from 'lucide-react';
 
-export const Footer: React.FC = () => {
+export const Footer: React.FC = memo(() => {
   return (
     <footer className="w-full border-t border-white/[0.08] bg-[#050811] pt-8 sm:pt-10 pb-6 px-3.5 sm:px-6 lg:px-8 mt-auto text-xs">
       <div className="mx-auto max-w-7xl space-y-6 sm:space-y-8">
@@ -29,19 +29,19 @@ export const Footer: React.FC = () => {
               SUPPORTED CHANNELS
             </h4>
             <ul className="space-y-2 text-slate-400 text-xs">
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Upwork Cover Letters
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Cold Email Sequences
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 LinkedIn InMail Pitches
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Twitter / X Outreach DMs
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 RFP &amp; Contract Proposals
               </li>
             </ul>
@@ -53,19 +53,19 @@ export const Footer: React.FC = () => {
               AI CAPABILITIES
             </h4>
             <ul className="space-y-2 text-slate-400 text-xs">
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Problem-First Opening Hook
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Proof &amp; Case Study Ranking
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Dual Strategic Angles (A/B)
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Low-Friction Loom CTAs
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Skill Tag Autocomplete (80+)
               </li>
             </ul>
@@ -77,19 +77,19 @@ export const Footer: React.FC = () => {
               GOLDEN RULES
             </h4>
             <ul className="space-y-2 text-slate-400 text-xs">
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Lead with the Bottleneck
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Quote Exact Tech Metrics
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
-                Keep Under 180 Words
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
+                Keep Under 140 Words
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Replace Calendly with Loom
               </li>
-              <li className="hover:text-indigo-300 transition-colors cursor-default">
+              <li className="hover:text-indigo-300 transition-colors duration-150 cursor-default">
                 Zero Generic Salutations
               </li>
             </ul>
@@ -105,7 +105,7 @@ export const Footer: React.FC = () => {
 
           <div className="flex items-center gap-1.5 font-mono">
             <span>Built with precision for freelancers by</span>
-            <span className="font-bold text-slate-300 hover:text-white transition-colors cursor-pointer">
+            <span className="font-bold text-slate-300 hover:text-white transition-colors duration-150 cursor-pointer">
               Hammad
             </span>
           </div>
@@ -114,4 +114,6 @@ export const Footer: React.FC = () => {
       </div>
     </footer>
   );
-};
+});
+
+Footer.displayName = 'Footer';

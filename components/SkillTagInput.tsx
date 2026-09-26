@@ -134,7 +134,7 @@ interface SkillTagInputProps {
   placeholder?: string;
 }
 
-export const SkillTagInput: React.FC<SkillTagInputProps> = ({
+export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
   tags,
   onChange,
   placeholder = 'Type letter or skill (e.g. j, react, python)...',
@@ -327,4 +327,6 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = ({
       </div>
     </div>
   );
-};
+});
+
+SkillTagInput.displayName = 'SkillTagInput';

@@ -7,7 +7,7 @@ interface LogoProps {
   size?: 'sm' | 'md' | 'lg';
 }
 
-export const Logo: React.FC<LogoProps> = ({
+export const Logo: React.FC<LogoProps> = React.memo(({
   className = '',
   showTagline = true,
   size = 'md',
@@ -80,4 +80,6 @@ export const Logo: React.FC<LogoProps> = ({
       </div>
     </div>
   );
-};
+});
+
+Logo.displayName = 'Logo';

@@ -1,7 +1,7 @@
 'use strict';
 'use client';
 
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/Header';
 import { HeroHeader } from '@/components/HeroHeader';
 import { Workspace } from '@/components/Workspace';
@@ -64,48 +64,66 @@ export default function Home() {
     setHistory(savedHistory);
   }, []);
 
-  const handleSaveProfile = (updated: FreelancerProfile) => {
+  const handleOpenHistory = useCallback(() => setIsHistoryOpen(true), []);
+  const handleCloseHistory = useCallback(() => setIsHistoryOpen(false), []);
+  const handleOpenSettings = useCallback(() => setIsSettingsOpen(true), []);
+  const handleCloseSettings = useCallback(() => setIsSettingsOpen(false), []);
+  const handleOpenAddProject = useCallback(() => setIsAddProjectOpen(true), []);
+  const handleCloseAddProject = useCallback(() => setIsAddProjectOpen(false), []);
+
+  const handleSaveProfile = useCallback((updated: FreelancerProfile) => {
     setProfile(updated);
     saveStoredProfile(updated);
-  };
+  }, []);
 
-  const handleAddProject = (newProject: ProjectItem) => {
-    const updated = {
-      ...profile,
-      projects: [newProject, ...profile.projects],
-    };
-    setProfile(updated);
+  const handleAddProject = useCallback((newProject: ProjectItem) => {
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        projects: [newProject, ...prev.projects],
+      };
+      saveStoredProfile(updated);
+      return updated;
+    });
     setSelectedProjectIds((prev) => [...prev, newProject.id]);
-    saveStoredProfile(updated);
-  };
+  }, []);
 
-  const handleOpenEditProject = (projectToEdit: ProjectItem) => {
+  const handleOpenEditProject = useCallback((projectToEdit: ProjectItem) => {
     setEditingProject(projectToEdit);
     setIsEditProjectOpen(true);
-  };
+  }, []);
 
-  const handleUpdateProject = (updatedProject: ProjectItem) => {
-    const updated = {
-      ...profile,
-      projects: profile.projects.map((p) =>
-        p.id === updatedProject.id ? updatedProject : p
-      ),
-    };
-    setProfile(updated);
-    saveStoredProfile(updated);
-  };
+  const handleCloseEditProject = useCallback(() => {
+    setIsEditProjectOpen(false);
+    setEditingProject(null);
+  }, []);
 
-  const handleDeleteProject = (id: string) => {
-    const updated = {
-      ...profile,
-      projects: profile.projects.filter((p) => p.id !== id),
-    };
-    setProfile(updated);
+  const handleUpdateProject = useCallback((updatedProject: ProjectItem) => {
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        projects: prev.projects.map((p) =>
+          p.id === updatedProject.id ? updatedProject : p
+        ),
+      };
+      saveStoredProfile(updated);
+      return updated;
+    });
+  }, []);
+
+  const handleDeleteProject = useCallback((id: string) => {
+    setProfile((prev) => {
+      const updated = {
+        ...prev,
+        projects: prev.projects.filter((p) => p.id !== id),
+      };
+      saveStoredProfile(updated);
+      return updated;
+    });
     setSelectedProjectIds((prev) => prev.filter((pId) => pId !== id));
-    saveStoredProfile(updated);
-  };
+  }, []);
 
-  const handleGenerate = async () => {
+  const handleGenerate = useCallback(async () => {
     if (!jobText.trim()) {
       alert('Please paste a job description or click "Try Sample Brief" first.');
       return;
@@ -141,9 +159,11 @@ export default function Home() {
         jobSnippet: jobText.substring(0, 120),
       };
 
-      const updatedHistory = [newHistoryItem, ...history].slice(0, 25);
-      setHistory(updatedHistory);
-      saveStoredHistory(updatedHistory);
+      setHistory((prevHistory) => {
+        const updatedHistory = [newHistoryItem, ...prevHistory].slice(0, 25);
+        saveStoredHistory(updatedHistory);
+        return updatedHistory;
+      });
     } catch (err: any) {
       console.error('Generation failed:', err);
       setErrorMessage(err.message || 'Failed to generate proposal via Gemini AI.');
@@ -151,17 +171,17 @@ export default function Home() {
     } finally {
       setIsGenerating(false);
     }
-  };
+  }, [jobText, profile, selectedProjectIds, channel, tone]);
 
-  const handleLoadSampleBrief = () => {
+  const handleLoadSampleBrief = useCallback(() => {
     const sample = `Looking for an experienced Next.js developer to fix a broken Stripe webhook race condition and resolve an urgent database migration issue. Customers are experiencing duplicate billing records during concurrent checkout events. Need this resolved and cleanly tested in our staging environment within 24-48 hours.`;
     setJobText(sample);
     setChannel('upwork');
     setTone('direct');
     setErrorMessage(null);
-  };
+  }, []);
 
-  const handleLoadPitchFromHistory = (item: HistoryItem) => {
+  const handleLoadPitchFromHistory = useCallback((item: HistoryItem) => {
     setChannel(item.channel);
     setTone(item.tone);
     setJobText(item.jobSnippet || '');
@@ -171,14 +191,14 @@ export default function Home() {
       detectedProblems: ['Loaded from archive'],
     });
     setErrorMessage(null);
-  };
+  }, []);
 
-  const handleClearHistory = () => {
+  const handleClearHistory = useCallback(() => {
     if (confirm('Clear all proposal history?')) {
       setHistory([]);
       saveStoredHistory([]);
     }
-  };
+  }, []);
 
   return (
     <div className="relative min-h-screen flex flex-col bg-[#050811] text-slate-100 selection:bg-indigo-500/20 selection:text-indigo-300 overflow-x-hidden">
@@ -189,8 +209,8 @@ export default function Home() {
       {/* 1. Header Navigation Bar */}
       <Header
         historyCount={history.length}
-        onOpenHistory={() => setIsHistoryOpen(true)}
-        onOpenSettings={() => setIsSettingsOpen(true)}
+        onOpenHistory={handleOpenHistory}
+        onOpenSettings={handleOpenSettings}
       />
 
       {/* 2. Hero Header Section with SEO H1 */}
@@ -211,14 +231,14 @@ export default function Home() {
             selectedProjectIds={selectedProjectIds}
             setSelectedProjectIds={setSelectedProjectIds}
             onSaveProfile={handleSaveProfile}
-            onOpenAddProject={() => setIsAddProjectOpen(true)}
+            onOpenAddProject={handleOpenAddProject}
             onOpenEditProject={handleOpenEditProject}
             onDeleteProject={handleDeleteProject}
             isGenerating={isGenerating}
             onGenerate={handleGenerate}
             generatedPitches={generatedPitches}
             errorMessage={errorMessage}
-            onOpenSettings={() => setIsSettingsOpen(true)}
+            onOpenSettings={handleOpenSettings}
             onLoadSampleBrief={handleLoadSampleBrief}
           />
         </ScrollReveal>
@@ -227,7 +247,7 @@ export default function Home() {
         <ScrollReveal delay={100}>
           <RecentPitches
             history={history}
-            onOpenHistory={() => setIsHistoryOpen(true)}
+            onOpenHistory={handleOpenHistory}
             onLoadPitch={handleLoadPitchFromHistory}
           />
         </ScrollReveal>
@@ -259,7 +279,7 @@ export default function Home() {
       {/* Modals & Drawers */}
       <HistoryDrawer
         isOpen={isHistoryOpen}
-        onClose={() => setIsHistoryOpen(false)}
+        onClose={handleCloseHistory}
         history={history}
         onClearHistory={handleClearHistory}
         onLoadPitch={handleLoadPitchFromHistory}
@@ -267,22 +287,19 @@ export default function Home() {
 
       <SettingsModal
         isOpen={isSettingsOpen}
-        onClose={() => setIsSettingsOpen(false)}
+        onClose={handleCloseSettings}
       />
 
       <AddProjectModal
         isOpen={isAddProjectOpen}
-        onClose={() => setIsAddProjectOpen(false)}
+        onClose={handleCloseAddProject}
         onAdd={handleAddProject}
       />
 
       <EditProjectModal
         isOpen={isEditProjectOpen}
         project={editingProject}
-        onClose={() => {
-          setIsEditProjectOpen(false);
-          setEditingProject(null);
-        }}
+        onClose={handleCloseEditProject}
         onSave={handleUpdateProject}
       />
 

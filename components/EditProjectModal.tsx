@@ -11,7 +11,7 @@ interface EditProjectModalProps {
   onSave: (updatedProject: ProjectItem) => void;
 }
 
-export const EditProjectModal: React.FC<EditProjectModalProps> = ({
+export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
   isOpen,
   project,
   onClose,
@@ -135,4 +135,6 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = ({
       </div>
     </div>
   );
-};
+});
+
+EditProjectModal.displayName = 'EditProjectModal';

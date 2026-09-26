@@ -1,5 +1,5 @@
 'use strict';
-import React, { useState } from 'react';
+import React, { useState, memo } from 'react';
 import { ChevronDown, HelpCircle } from 'lucide-react';
 
 interface FaqItem {
@@ -40,7 +40,7 @@ const FAQS: FaqItem[] = [
   },
 ];
 
-export const FaqSection: React.FC = () => {
+export const FaqSection: React.FC = memo(() => {
   const [openIdx, setOpenIdx] = useState<number | null>(0);
 
   const toggle = (idx: number) => {
@@ -85,14 +85,14 @@ export const FaqSection: React.FC = () => {
                   {faq.question}
                 </span>
                 <ChevronDown
-                  className={`h-4 w-4 text-indigo-400 shrink-0 transition-transform duration-300 ${
+                  className={`h-4 w-4 text-indigo-400 shrink-0 transition-transform duration-200 ${
                     isOpen ? 'rotate-180 text-indigo-300' : ''
                   }`}
                 />
               </button>
 
               <div
-                className={`grid transition-all duration-300 ease-in-out ${
+                className={`grid transition-all duration-200 ease-in-out ${
                   isOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
                 }`}
               >
@@ -110,4 +110,6 @@ export const FaqSection: React.FC = () => {
       </div>
     </section>
   );
-};
+});
+
+FaqSection.displayName = 'FaqSection';

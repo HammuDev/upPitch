@@ -26,7 +26,7 @@ import {
   Lock,
 } from 'lucide-react';
 
-export const ComparisonTable: React.FC = () => {
+export const ComparisonTable: React.FC = React.memo(() => {
   const [activeTab, setActiveTab] = useState<'cards' | 'simulator' | 'matrix'>('cards');
   const [activeCardView, setActiveCardView] = useState<'all' | 'uppitch' | 'chatgpt' | 'manual'>('all');
 
@@ -706,4 +706,6 @@ export const ComparisonTable: React.FC = () => {
 
     </section>
   );
-};
+});
+
+ComparisonTable.displayName = 'ComparisonTable';
