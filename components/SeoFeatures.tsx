@@ -47,7 +47,7 @@ export const SeoFeatures: React.FC = memo(() => {
               Instant Problem Extraction
             </h3>
             <p className="text-xs text-slate-300 leading-relaxed">
-              Pinpoints the client&apos;s core technical obstacle and frames sentence 1 directly around solving that exact bottleneck.
+              Pinpoints the client&apos;s core technical obstacle and frames the first sentence directly around solving that exact bottleneck.
             </p>
           </div>
 

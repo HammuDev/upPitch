@@ -27,12 +27,12 @@ export const Header: React.FC<HeaderProps> = memo(({
         </div>
 
         {/* Right: Actions (History + API Settings only) */}
-        <div className="flex items-center gap-2 sm:gap-2.5">
+        <div className="flex items-center gap-1.5 sm:gap-2.5 shrink-0">
           {/* History Drawer Trigger */}
           <button
             type="button"
             onClick={onOpenHistory}
-            className="cursor-pointer inline-flex items-center gap-1.5 sm:gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 sm:px-3.5 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/[0.08] hover:text-white transition-colors duration-150 shadow-2xs"
+            className="cursor-pointer inline-flex items-center gap-1.5 sm:gap-2 rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 sm:px-3.5 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/[0.08] hover:text-white transition-colors duration-150 shadow-2xs shrink-0"
             title="View Proposal History"
           >
             <Clock className="h-3.5 w-3.5 text-slate-400 shrink-0" />
@@ -47,11 +47,12 @@ export const Header: React.FC<HeaderProps> = memo(({
           <button
             type="button"
             onClick={onOpenSettings}
-            className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.04] px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/[0.08] hover:text-white transition-colors duration-150 shadow-2xs"
+            className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg border border-white/[0.08] bg-white/[0.04] px-2.5 sm:px-3 py-1.5 text-xs font-semibold text-slate-200 hover:bg-white/[0.08] hover:text-white transition-colors duration-150 shadow-2xs shrink-0"
             title="Google Gemini API Settings"
           >
             <SlidersHorizontal className="h-3.5 w-3.5 text-slate-400 shrink-0" />
             <span className="hidden sm:inline">API Settings</span>
+            <span className="sm:hidden">Settings</span>
           </button>
         </div>
 

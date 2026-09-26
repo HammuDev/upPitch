@@ -29,7 +29,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({ savedPitchesCount }
           </h1>
           
           <p className="text-xs sm:text-sm text-slate-300 font-normal leading-relaxed max-w-xl">
-            UpPitch analyzes the client&apos;s exact technical bottleneck, matches your verified project proof, and generates high-converting proposals guaranteed to hook clients in sentence 1.
+            UpPitch analyzes the client&apos;s exact technical bottleneck, matches your verified project proof, and generates high-converting proposals guaranteed to hook clients <span className="inline-block whitespace-nowrap">in the first sentence.</span>
           </p>
         </div>
 

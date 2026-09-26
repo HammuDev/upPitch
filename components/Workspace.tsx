@@ -487,23 +487,24 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
           <div className="rounded-2xl border border-white/[0.08] bg-[#0B0F1A] p-3.5 sm:p-5 shadow-2xl space-y-3.5 sm:space-y-4 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between backdrop-blur-xs">
 
             <div>
-              {/* Top Tab Bar inside Card */}
-              <div className="flex items-center gap-1.5 border-b border-white/[0.08] pb-2.5 overflow-x-auto no-scrollbar">
+              {/* Top Tab Bar inside Card - 3-Column Responsive Control */}
+              <div className="grid grid-cols-3 gap-1 sm:gap-1.5 border-b border-white/[0.08] pb-2.5">
                 {[
-                  { id: 'var-a', label: 'Variation A (Problem-First Fix)' },
-                  { id: 'var-b', label: 'Variation B (Consultative Loom Angle)' },
-                  { id: 'portfolio', label: 'Matched Case Studies' },
+                  { id: 'var-a', short: 'Variation A', full: 'Variation A (Problem-First Fix)' },
+                  { id: 'var-b', short: 'Variation B', full: 'Variation B (Consultative Loom)' },
+                  { id: 'portfolio', short: `Proof (${selectedCount})`, full: `Matched Proof (${selectedCount})` },
                 ].map((t) => (
                   <button
                     key={t.id}
                     type="button"
                     onClick={() => setActiveTab(t.id as any)}
-                    className={`cursor-pointer shrink-0 rounded-lg px-2.5 sm:px-3 py-1.5 text-xs font-semibold transition-all duration-200 ${activeTab === t.id
-                        ? 'bg-[#181F33] text-white shadow-xs border border-white/[0.1] scale-[1.02]'
+                    className={`cursor-pointer rounded-lg py-1.5 sm:py-2 px-1 sm:px-2.5 text-center text-xs font-semibold transition-all duration-200 ${activeTab === t.id
+                        ? 'bg-[#181F33] text-white shadow-xs border border-white/[0.1] scale-[1.01]'
                         : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.02]'
                       }`}
                   >
-                    {t.label}
+                    <span className="sm:hidden text-[11px] font-bold block truncate">{t.short}</span>
+                    <span className="hidden sm:inline font-bold">{t.full}</span>
                   </button>
                 ))}
               </div>
@@ -610,7 +611,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                         Problem-First Solution
                       </h3>
                       <p className="text-[11px] text-slate-300 leading-relaxed">
-                        Leads in sentence 1 with the client&apos;s exact technical bug, commit timeline, and verified metrics from your project vault.
+                        Leads in the opening sentence with the client&apos;s exact technical bug, commit timeline, and verified metrics.
                       </p>
                     </div>
 
@@ -729,28 +730,42 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                 /* LIVE GENERATED PITCH VIEW */
                 <div className="py-3 sm:py-4 space-y-3 sm:space-y-4 animate-slide-fade">
                   {/* Toolbar */}
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2.5 border-b border-white/[0.06]">
-                    <div className="flex items-center gap-1.5">
-                      <button
-                        type="button"
-                        onClick={handleShorten}
-                        className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
-                      >
-                        <Scissors className="h-3 w-3" />
-                        <span>Shorten 30%</span>
-                      </button>
-                      <button
-                        type="button"
-                        onClick={handleAddLoom}
-                        className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
-                      >
-                        <Video className="h-3 w-3" />
-                        <span>+ Loom Hook</span>
-                      </button>
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-white/[0.06]">
+                    <div className="flex items-center justify-between sm:justify-start gap-1.5 w-full sm:w-auto">
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={handleShorten}
+                          className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
+                        >
+                          <Scissors className="h-3 w-3" />
+                          <span>Shorten 30%</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={handleAddLoom}
+                          className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
+                        >
+                          <Video className="h-3 w-3" />
+                          <span>+ Loom Hook</span>
+                        </button>
+                      </div>
+
+                      {/* Mobile Word Count Badge */}
+                      <span className={`sm:hidden text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
+                        wordCount > 0 && wordCount <= 140
+                          ? 'text-emerald-300 bg-emerald-500/15 border border-emerald-500/30'
+                          : wordCount > 140
+                          ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
+                          : 'text-slate-400'
+                      }`}>
+                        {wordCount}w {wordCount > 0 && wordCount <= 140 ? '✓' : ''}
+                      </span>
                     </div>
 
-                    <div className="flex items-center gap-2">
-                      <span className={`text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
+                    <div className="flex items-center justify-end gap-2 w-full sm:w-auto">
+                      {/* Desktop Word Count Badge */}
+                      <span className={`hidden sm:inline-block text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
                         wordCount > 0 && wordCount <= 140
                           ? 'text-emerald-300 bg-emerald-500/15 border border-emerald-500/30'
                           : wordCount > 140
@@ -765,7 +780,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                         className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
                       >
                         <RotateCw className="h-3 w-3" />
-                        <span className="hidden sm:inline">Regenerate</span>
+                        <span>Regenerate</span>
                       </button>
                       <button
                         type="button"

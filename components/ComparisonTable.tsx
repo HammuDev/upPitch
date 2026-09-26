@@ -238,7 +238,7 @@ export const ComparisonTable: React.FC = React.memo(() => {
                   </div>
 
                   <p className="text-[11.5px] text-indigo-200 leading-snug">
-                    Hooks hiring managers in sentence 1 within Upwork&apos;s 140-char search preview.
+                    Hooks hiring managers in the first sentence within Upwork&apos;s 140-character search preview.
                   </p>
                 </div>
 
@@ -249,7 +249,7 @@ export const ComparisonTable: React.FC = React.memo(() => {
                     <div>
                       <span className="font-semibold text-white block">Problem-First Technical Hook</span>
                       <p className="text-[11px] text-indigo-200 leading-snug">
-                        Immediate diagnosis of their exact bug and turnaround time in sentence 1.
+                        Immediate diagnosis of their exact bug and turnaround time in the opening line.
                       </p>
                     </div>
                   </div>

@@ -73,7 +73,7 @@ export const Logo: React.FC<LogoProps> = React.memo(({
         </div>
 
         {showTagline && (
-          <span className="text-[10px] sm:text-[11px] font-medium text-slate-400 tracking-normal truncate">
+          <span className="hidden md:inline text-[10px] sm:text-[11px] font-medium text-slate-400 tracking-normal truncate">
             Smart Proposals for Upwork &amp; Outreach
           </span>
         )}
