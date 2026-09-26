@@ -1,0 +1,38 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="upPitchGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#6366F1" />
+      <stop offset="50%" stop-color="#4F46E5" />
+      <stop offset="100%" stop-color="#7C3AED" />
+    </linearGradient>
+    <linearGradient id="glossGrad" x1="0%" y1="0%" x2="0%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" stop-opacity="0.3" />
+      <stop offset="100%" stop-color="#FFFFFF" stop-opacity="0" />
+    </linearGradient>
+  </defs>
+
+  <!-- Squircle Base -->
+  <rect x="2" y="2" width="60" height="60" rx="16" fill="url(#upPitchGrad)" stroke="rgba(255, 255, 255, 0.25)" stroke-width="2" />
+
+  <!-- Top Gloss Highlight -->
+  <rect x="3" y="3" width="58" height="28" rx="14" fill="url(#glossGrad)" />
+
+  <!-- Proposal Fold Base Mark -->
+  <path
+    d="M18 48C18 45 20.5 42.5 23.5 42.5H45.5M18 48C18 51 20.5 53.5 23.5 53.5H45.5C46.8 53.5 48 52.3 48 51V17C48 14.5 46 12.5 43.5 12.5H23.5C20.5 12.5 18 15 18 18V48Z"
+    stroke="#FFFFFF"
+    stroke-width="3.5"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+    opacity="0.9"
+  />
+
+  <!-- Upward Dynamic Growth Arrow -->
+  <path
+    d="M26 36L41 21M41 21H30M41 21V32"
+    stroke="#FFFFFF"
+    stroke-width="4.2"
+    stroke-linecap="round"
+    stroke-linejoin="round"
+  />
+</svg>
