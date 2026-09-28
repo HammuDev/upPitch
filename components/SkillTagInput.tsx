@@ -3,7 +3,6 @@ import React, { useState, useRef, useEffect } from 'react';
 import { X, Plus, Sparkles } from 'lucide-react';
 
 export const COMPREHENSIVE_SKILLS: string[] = [
-  // J skills (for exact user example)
   'JavaScript',
   'Java',
   'JSON',
@@ -16,8 +15,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'Jupyter Notebook',
   'JUnit',
   'JOOQ',
-
-  // Frontend & Frameworks
   'React',
   'Next.js',
   'TypeScript',
@@ -39,8 +36,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'Zustand',
   'React Query (TanStack)',
   'Responsive Design',
-
-  // Backend & APIs
   'Node.js',
   'Express.js',
   'NestJS',
@@ -61,8 +56,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'WebSockets',
   'gRPC',
   'Microservices',
-
-  // Databases & Storage
   'PostgreSQL',
   'MongoDB',
   'MySQL',
@@ -75,8 +68,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'DynamoDB',
   'Elasticsearch',
   'Vector DB (Pinecone/Chroma)',
-
-  // Cloud, DevOps & Infra
   'Docker',
   'Kubernetes',
   'AWS (Amazon Web Services)',
@@ -89,8 +80,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'GitHub Actions',
   'Terraform',
   'Nginx',
-
-  // Payments & Integrations
   'Stripe',
   'Stripe Webhooks',
   'PayPal',
@@ -101,8 +90,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'Resend',
   'Twilio',
   'SendGrid',
-
-  // AI & Machine Learning
   'Google Gemini API',
   'OpenAI API',
   'Anthropic Claude API',
@@ -113,8 +100,6 @@ export const COMPREHENSIVE_SKILLS: string[] = [
   'Prompt Engineering',
   'Computer Vision',
   'NLP',
-
-  // Testing & Tools
   'Playwright',
   'Cypress',
   'Vitest',
@@ -144,7 +129,6 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
   const containerRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
 
-  // Filter skills based on current input text
   const query = inputValue.trim().toLowerCase();
   const suggestions = query
     ? COMPREHENSIVE_SKILLS.filter(
@@ -154,7 +138,6 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
       ).slice(0, 10)
     : [];
 
-  // Popular / Quick pick skills
   const popularSkills = [
     'JavaScript',
     'TypeScript',
@@ -168,7 +151,6 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
     'Docker',
   ].filter((s) => !tags.some((t) => t.toLowerCase() === s.toLowerCase()));
 
-  // Close dropdown when clicking outside
   useEffect(() => {
     const handleClickOutside = (e: MouseEvent) => {
       if (containerRef.current && !containerRef.current.contains(e.target as Node)) {
@@ -198,7 +180,6 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
     if (e.key === 'Enter' || e.key === ',') {
       e.preventDefault();
       if (suggestions.length > 0 && query.length > 0) {
-        // If there's an exact or top suggestion, add that
         addTag(suggestions[0]);
       } else if (inputValue.trim()) {
         addTag(inputValue);
@@ -215,12 +196,12 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
       {/* Container Box with active tag pills + text input */}
       <div
         onClick={() => inputRef.current?.focus()}
-        className="cursor-text min-h-[42px] w-full rounded-xl border border-white/[0.08] bg-[#070A14] p-2 flex flex-wrap items-center gap-1.5 focus-within:border-indigo-500/80 transition-colors"
+        className="cursor-text min-h-[42px] w-full rounded-xl border border-slate-200 bg-slate-50 p-2 flex flex-wrap items-center gap-1.5 focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition-all"
       >
         {tags.map((tag) => (
           <span
             key={tag}
-            className="inline-flex items-center gap-1 rounded-lg bg-indigo-500/15 border border-indigo-500/30 px-2.5 py-1 text-xs font-semibold text-indigo-200 animate-slide-fade transition-transform hover:scale-105"
+            className="inline-flex items-center gap-1 rounded-lg bg-indigo-50 border border-indigo-200 px-2.5 py-1 text-xs font-semibold text-indigo-700 animate-slide-fade transition-transform hover:scale-105"
           >
             <span>{tag}</span>
             <button
@@ -229,7 +210,7 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
                 e.stopPropagation();
                 removeTag(tag);
               }}
-              className="cursor-pointer text-indigo-300/70 hover:text-white transition-colors ml-0.5 p-0.5"
+              className="cursor-pointer text-indigo-400 hover:text-indigo-700 transition-colors ml-0.5 p-0.5"
             >
               <X className="h-3 w-3" />
             </button>
@@ -247,25 +228,25 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
           onFocus={() => setIsOpen(true)}
           onKeyDown={handleKeyDown}
           placeholder={tags.length === 0 ? placeholder : 'Add more skills...'}
-          className="cursor-text flex-1 min-w-[140px] bg-transparent text-xs text-white placeholder:text-slate-500 focus:outline-none px-1.5 py-1"
+          className="cursor-text flex-1 min-w-[140px] bg-transparent text-xs text-slate-900 placeholder:text-slate-400 focus:outline-none px-1.5 py-1"
         />
       </div>
 
       {/* Autocomplete Dropdown Menu */}
       {isOpen && query.length > 0 && (
-        <div className="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-xl border border-white/[0.1] bg-[#0E1528] p-1.5 shadow-2xl space-y-1 max-h-56 overflow-y-auto animate-slide-fade backdrop-blur-md">
-          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono flex items-center justify-between">
+        <div className="absolute left-0 right-0 top-full mt-1.5 z-50 rounded-xl border border-indigo-100 bg-white p-1.5 shadow-2xl space-y-1 max-h-56 overflow-y-auto animate-slide-fade">
+          <div className="px-2 py-1 text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono flex items-center justify-between">
             <span>Matching Skills ({suggestions.length})</span>
-            <span className="text-indigo-400">Press Enter or click</span>
+            <span className="text-indigo-600">Press Enter or click</span>
           </div>
 
           {suggestions.length === 0 ? (
-            <div className="p-2 text-center text-xs text-slate-400">
+            <div className="p-2 text-center text-xs text-slate-500">
               <span>No exact match. Press </span>
               <button
                 type="button"
                 onClick={() => addTag(inputValue)}
-                className="cursor-pointer font-bold text-indigo-400 hover:underline inline-flex items-center gap-1"
+                className="cursor-pointer font-bold text-indigo-600 hover:underline inline-flex items-center gap-1"
               >
                 <span>Add &quot;{inputValue}&quot;</span>
                 <Plus className="h-3 w-3" />
@@ -273,7 +254,6 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
             </div>
           ) : (
             suggestions.map((skill) => {
-              // Highlight matching letters
               const lowerSkill = skill.toLowerCase();
               const matchIdx = lowerSkill.indexOf(query);
               const before = skill.slice(0, matchIdx);
@@ -285,13 +265,13 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
                   key={skill}
                   type="button"
                   onClick={() => addTag(skill)}
-                  className="cursor-pointer w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs text-slate-200 hover:bg-indigo-600 hover:text-white transition-colors group"
+                  className="cursor-pointer w-full flex items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-xs text-slate-700 hover:bg-indigo-600 hover:text-white transition-colors group"
                 >
                   <div className="flex items-center gap-2">
-                    <span className="h-1.5 w-1.5 rounded-full bg-indigo-400 group-hover:bg-white" />
+                    <span className="h-1.5 w-1.5 rounded-full bg-indigo-500 group-hover:bg-white" />
                     <span>
                       {before}
-                      <span className="font-extrabold text-indigo-300 group-hover:text-white underline decoration-indigo-400">
+                      <span className="font-extrabold text-indigo-700 group-hover:text-white underline decoration-indigo-400">
                         {match}
                       </span>
                       {after}
@@ -305,10 +285,10 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
         </div>
       )}
 
-      {/* Popular Skills Quick-Pills (when input is empty or focused) */}
+      {/* Popular Skills Quick-Pills */}
       <div className="pt-1">
-        <div className="flex items-center gap-1 text-[10.5px] font-medium text-slate-400 mb-1.5">
-          <Sparkles className="h-3 w-3 text-indigo-400" />
+        <div className="flex items-center gap-1 text-[10.5px] font-medium text-slate-500 mb-1.5">
+          <Sparkles className="h-3 w-3 text-indigo-600" />
           <span>Popular suggestions:</span>
         </div>
         <div className="flex flex-wrap gap-1.5">
@@ -317,9 +297,9 @@ export const SkillTagInput: React.FC<SkillTagInputProps> = React.memo(({
               key={skill}
               type="button"
               onClick={() => addTag(skill)}
-              className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.06] bg-white/[0.02] px-2 py-0.5 text-[11px] font-medium text-slate-300 hover:border-indigo-500/50 hover:bg-indigo-500/10 hover:text-indigo-200 transition-all"
+              className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-700 hover:border-indigo-300 hover:bg-indigo-50 hover:text-indigo-700 transition-all shadow-2xs"
             >
-              <Plus className="h-2.5 w-2.5 text-indigo-400" />
+              <Plus className="h-2.5 w-2.5 text-indigo-600" />
               <span>{skill}</span>
             </button>
           ))}

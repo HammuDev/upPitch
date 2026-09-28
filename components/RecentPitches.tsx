@@ -25,13 +25,13 @@ export const RecentPitches: React.FC<RecentPitchesProps> = memo(({
 
   return (
     <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 py-2 sm:py-3">
-      <div className="rounded-2xl border border-white/[0.08] bg-[#0B0F1A] p-3.5 sm:p-4 space-y-2.5 sm:space-y-3 shadow-xl">
+      <div className="rounded-2xl border border-indigo-100 bg-white p-3.5 sm:p-5 space-y-3 shadow-xl shadow-indigo-500/5">
         
         {/* Header */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
-            <Zap className="h-3.5 w-3.5 text-indigo-400" />
-            <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+            <Zap className="h-4 w-4 text-indigo-600" />
+            <span className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono">
               RECENT PROPOSALS
             </span>
           </div>
@@ -39,7 +39,7 @@ export const RecentPitches: React.FC<RecentPitchesProps> = memo(({
           <button
             type="button"
             onClick={onOpenHistory}
-            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-indigo-400 hover:text-indigo-300 transition-colors duration-150"
+            className="cursor-pointer inline-flex items-center gap-1 text-xs font-semibold text-indigo-600 hover:text-indigo-700 transition-colors duration-150"
           >
             <span>Open full history</span>
             <ArrowRight className="h-3 w-3" />
@@ -48,8 +48,8 @@ export const RecentPitches: React.FC<RecentPitchesProps> = memo(({
 
         {/* Body */}
         {recentThree.length === 0 ? (
-          <div className="rounded-xl border border-dashed border-white/[0.06] bg-[#070A14]/60 p-5 sm:p-6 text-center">
-            <p className="text-xs text-slate-400">
+          <div className="rounded-xl border border-dashed border-indigo-200 bg-indigo-50/20 p-5 sm:p-6 text-center">
+            <p className="text-xs text-slate-500">
               Your last three generated proposals will appear here with one-click copy.
             </p>
           </div>
@@ -58,37 +58,37 @@ export const RecentPitches: React.FC<RecentPitchesProps> = memo(({
             {recentThree.map((item) => (
               <div
                 key={item.id}
-                className="rounded-xl border border-white/[0.06] bg-[#070A14] p-3 sm:p-3.5 space-y-2 flex flex-col justify-between hover:border-indigo-500/40 transition-colors duration-150 shadow-2xs"
+                className="rounded-xl border border-slate-200 bg-slate-50/60 p-3 sm:p-3.5 space-y-2 flex flex-col justify-between hover:border-indigo-300 hover:bg-white transition-all duration-150 shadow-xs"
               >
                 <div className="space-y-1">
                   <div className="flex items-center justify-between">
-                    <span className="text-[10px] font-bold uppercase tracking-wider px-1.5 py-0.2 rounded bg-indigo-500/10 text-indigo-300 border border-indigo-500/20 font-mono">
+                    <span className="text-[10px] font-bold uppercase tracking-wider px-2 py-0.5 rounded bg-indigo-100 text-indigo-700 border border-indigo-200 font-mono">
                       {item.channel}
                     </span>
-                    <span className="text-[10px] text-slate-500 font-mono">
+                    <span className="text-[10px] text-slate-400 font-mono">
                       {item.timestamp}
                     </span>
                   </div>
-                  <p className="text-xs text-slate-300 line-clamp-3 leading-relaxed">
+                  <p className="text-xs text-slate-700 line-clamp-3 leading-relaxed">
                     {item.pitchText}
                   </p>
                 </div>
 
-                <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/[0.04]">
+                <div className="flex items-center justify-end gap-2 pt-2 border-t border-slate-200">
                   <button
                     type="button"
                     onClick={() => onLoadPitch(item)}
-                    className="cursor-pointer text-[11px] text-slate-400 hover:text-white font-medium transition-colors duration-150"
+                    className="cursor-pointer text-[11px] text-slate-600 hover:text-indigo-600 font-medium transition-colors duration-150"
                   >
                     Load
                   </button>
                   <button
                     type="button"
                     onClick={() => handleCopy(item)}
-                    className={`cursor-pointer inline-flex items-center gap-1 rounded px-2.5 py-0.5 text-[11px] font-semibold transition-all duration-150 ${
+                    className={`cursor-pointer inline-flex items-center gap-1 rounded-lg px-2.5 py-1 text-[11px] font-semibold transition-all duration-150 ${
                       copiedId === item.id
                         ? 'bg-emerald-600 text-white shadow-xs'
-                        : 'bg-white/[0.04] text-indigo-300 hover:bg-white/[0.08] hover:text-white'
+                        : 'bg-white border border-slate-200 text-indigo-700 hover:bg-indigo-50 shadow-2xs'
                     }`}
                   >
                     {copiedId === item.id ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}

@@ -21,17 +21,17 @@ export const RuleTicker: React.FC = memo(() => {
   }, []);
 
   return (
-    <div className="w-full border-y border-white/[0.06] bg-[#050811]/90 py-2 sm:py-2.5 px-3.5 sm:px-6 lg:px-8 my-2 sm:my-3">
+    <div className="w-full border-y border-indigo-100 bg-white/70 backdrop-blur-sm py-2 sm:py-2.5 px-3.5 sm:px-6 lg:px-8 my-2 sm:my-3">
       <div className="mx-auto max-w-7xl flex flex-col sm:flex-row items-center justify-between gap-2.5 sm:gap-3 text-xs">
         
         {/* Golden Rule Pill */}
-        <div className="flex items-center gap-2 bg-[#0B0F1A] border border-white/[0.08] rounded-full px-3 py-1.5 shadow-xs max-w-full sm:max-w-3xl overflow-hidden">
-          <span className="flex items-center gap-1 rounded-full bg-amber-500/15 border border-amber-500/30 px-2 py-0.2 text-[9.5px] sm:text-[10px] font-bold text-amber-300 font-mono shrink-0">
+        <div className="flex items-center gap-2 bg-white border border-indigo-100 rounded-full px-3.5 py-1.5 shadow-xs max-w-full sm:max-w-3xl overflow-hidden">
+          <span className="flex items-center gap-1 rounded-full bg-amber-50 border border-amber-200 px-2 py-0.2 text-[9.5px] sm:text-[10px] font-bold text-amber-700 font-mono shrink-0">
             <span>💡</span> GOLDEN RULE
           </span>
           <span
             key={currentIdx}
-            className="animate-slide-fade text-slate-300 font-normal truncate text-[11px] sm:text-xs"
+            className="animate-slide-fade text-slate-700 font-medium truncate text-[11px] sm:text-xs"
           >
             {RULES[currentIdx]}
           </span>
@@ -40,7 +40,7 @@ export const RuleTicker: React.FC = memo(() => {
               <span
                 key={i}
                 className={`h-1.5 w-1.5 rounded-full transition-all duration-150 ${
-                  i === currentIdx ? 'bg-indigo-400 w-3' : 'bg-slate-700'
+                  i === currentIdx ? 'bg-indigo-600 w-3' : 'bg-slate-300'
                 }`}
               />
             ))}
@@ -48,10 +48,10 @@ export const RuleTicker: React.FC = memo(() => {
         </div>
 
         {/* Right: Badge */}
-        <div className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] px-2.5 sm:px-3 py-1 text-[10px] text-slate-400 font-mono shrink-0">
-          <span>Formula</span>
-          <span className="font-bold text-indigo-300 flex items-center gap-1">
-            <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" /> Top 1% Bids
+        <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50/50 px-2.5 sm:px-3 py-1 text-[10px] text-slate-600 font-mono shrink-0">
+          <span>Formula:</span>
+          <span className="font-bold text-indigo-700 flex items-center gap-1">
+            <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" /> Top 1% Bids
           </span>
         </div>
 

@@ -16,6 +16,7 @@ import {
   Sparkle,
   AlertCircle,
   Key,
+  Mail,
 } from 'lucide-react';
 import { Channel, Tone, FreelancerProfile, ProjectItem, GeneratedPitches } from '@/types';
 
@@ -124,7 +125,6 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
   const handleShorten = () => {
     if (!currentPitchText) return;
     const lines = currentPitchText.split('\n');
-    // Keep greeting, problem statement, core bullet points, CTA and regards
     const condensed = lines
       .filter((l) => !l.toLowerCase().includes('furthermore') && !l.toLowerCase().includes('in addition to that'))
       .join('\n');
@@ -168,51 +168,74 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
   const selectedCount = profile.projects.filter((p) => selectedProjectIds.includes(p.id)).length;
 
   return (
-    <div className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 py-3 sm:py-4">
-      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-5 items-start">
+    <div id="workspace" className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 py-3 sm:py-4 scroll-mt-20">
+      <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 sm:gap-6 items-start">
 
         {/* ==================================================== */}
         {/* LEFT COLUMN: User Inputs & Profile Context           */}
         {/* ==================================================== */}
         <section className="lg:col-span-5 space-y-3 sm:space-y-4" aria-label="Proposal Configuration">
 
-          <div className="rounded-2xl border border-white/[0.08] bg-[#0B0F1A] p-3.5 sm:p-5 space-y-3.5 sm:space-y-4 shadow-xl">
+          <div className="rounded-2xl border border-indigo-100/90 bg-white p-4 sm:p-5 space-y-4 shadow-xl shadow-indigo-500/5">
 
             {/* 1. CHANNEL SELECTOR */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+                <label className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono">
                   TARGET OUTREACH CHANNEL
                 </label>
-                <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono">
+                <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
                   {CHANNELS.find((c) => c.id === channel)?.limit}
                 </span>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 rounded-xl border border-white/[0.06] bg-[#070A14] p-1">
+              <div className="grid grid-cols-2 sm:grid-cols-4 gap-1.5 rounded-xl border border-slate-200 bg-slate-50 p-1">
                 {CHANNELS.map((item) => (
                   <button
                     key={item.id}
                     type="button"
                     onClick={() => setChannel(item.id)}
-                    className={`cursor-pointer rounded-lg py-2 px-1 text-center text-xs font-semibold transition-all duration-200 ${channel === item.id
-                        ? 'bg-[#181F33] text-white shadow-xs border border-white/[0.1] scale-[1.02]'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.02]'
-                      }`}
+                    className={`cursor-pointer rounded-lg py-2 px-1 text-center text-xs font-semibold transition-all duration-200 flex items-center justify-center gap-1.5 ${
+                      channel === item.id
+                        ? 'bg-indigo-600 text-white shadow-xs scale-[1.02]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-white/80'
+                    }`}
                   >
-                    {item.label}
+                    {item.id === 'upwork' && (
+                      <img
+                        src="/images/upwork-icon.png"
+                        alt="Upwork"
+                        className="h-3.5 w-3.5 object-contain shrink-0"
+                      />
+                    )}
+                    {item.id === 'linkedin' && (
+                      <img
+                        src="/images/linkedin-icon.png"
+                        alt="LinkedIn"
+                        className="h-3.5 w-3.5 object-contain rounded-[2px] shrink-0"
+                      />
+                    )}
+                    {item.id === 'cold-email' && (
+                      <Mail className="h-3.5 w-3.5 shrink-0" />
+                    )}
+                    {item.id === 'twitter' && (
+                      <svg className="h-3 w-3 fill-currentColor shrink-0" viewBox="0 0 24 24">
+                        <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z" />
+                      </svg>
+                    )}
+                    <span>{item.label}</span>
                   </button>
                 ))}
               </div>
 
-              <p className="text-[10.5px] sm:text-[11px] text-slate-400">
+              <p className="text-[11px] text-slate-500">
                 Clients skim the first 2 lines. We lead directly with their technical bottleneck, not your résumé.
               </p>
             </div>
 
             {/* 2. PROPOSAL TONE & STRATEGY */}
             <div className="space-y-2">
-              <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 font-mono block">
+              <label className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono block">
                 STRATEGY &amp; TONE
               </label>
 
@@ -222,10 +245,11 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                     key={item.id}
                     type="button"
                     onClick={() => setTone(item.id)}
-                    className={`cursor-pointer rounded-lg border px-2.5 py-1.5 text-center text-xs font-semibold transition-all duration-200 ${tone === item.id
-                        ? 'border-indigo-500/60 bg-indigo-500/15 text-indigo-200 font-bold shadow-xs scale-[1.02]'
-                        : 'border-white/[0.06] bg-white/[0.03] text-slate-400 hover:text-slate-200 hover:border-white/[0.12] hover:bg-white/[0.05]'
-                      }`}
+                    className={`cursor-pointer rounded-lg border px-2.5 py-2 text-center text-xs font-semibold transition-all duration-200 ${
+                      tone === item.id
+                        ? 'border-indigo-400 bg-indigo-50/90 text-indigo-700 font-bold shadow-xs scale-[1.02]'
+                        : 'border-slate-200 bg-slate-50/50 text-slate-600 hover:text-slate-900 hover:border-slate-300 hover:bg-slate-50'
+                    }`}
                   >
                     {item.label}
                   </button>
@@ -236,28 +260,28 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
             {/* 3. CLIENT JOB BRIEF */}
             <div className="space-y-2">
               <div className="flex items-center justify-between">
-                <label className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+                <label className="text-[10.5px] sm:text-[11px] font-bold uppercase tracking-wider text-slate-500 font-mono">
                   CLIENT JOB BRIEF &amp; REQUIREMENTS
                 </label>
-                <span className="text-[10px] sm:text-[11px] text-slate-500 font-mono">
+                <span className="text-[10px] sm:text-[11px] text-slate-400 font-mono">
                   {charCount} chars
                 </span>
               </div>
 
-              <div className="relative rounded-xl border border-white/[0.08] bg-[#070A14] overflow-hidden focus-within:border-indigo-500/60 transition-colors">
+              <div className="relative rounded-xl border border-slate-200 bg-slate-50/50 overflow-hidden focus-within:border-indigo-500 focus-within:bg-white focus-within:ring-2 focus-within:ring-indigo-100 transition-all">
                 <textarea
                   rows={5}
                   value={jobText}
                   onChange={(e) => setJobText(e.target.value)}
                   placeholder="Paste the full client brief or Upwork posting here.&#10;&#10;Include the core bottleneck, tech stack requirements, and deadline. UpPitch mirrors this exact technical language in your opening pitch."
-                  className="cursor-text w-full bg-transparent p-3 sm:p-4 text-xs text-slate-100 placeholder:text-slate-500 focus:outline-none leading-relaxed resize-y min-h-[120px]"
+                  className="cursor-text w-full bg-transparent p-3 sm:p-4 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none leading-relaxed resize-y min-h-[120px]"
                 />
 
-                <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-t border-white/[0.06] bg-white/[0.01]">
+                <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-2 border-t border-slate-200/80 bg-white/70">
                   <button
                     type="button"
                     onClick={handlePasteClipboard}
-                    className="cursor-pointer inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-300 hover:text-white transition-colors"
+                    className="cursor-pointer inline-flex items-center gap-1.5 text-[11px] font-medium text-slate-600 hover:text-indigo-600 transition-colors"
                   >
                     <ClipboardPaste className="h-3 w-3 text-slate-400" />
                     <span>Paste from Clipboard</span>
@@ -266,7 +290,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                   <button
                     type="button"
                     onClick={onLoadSampleBrief}
-                    className="cursor-pointer inline-flex items-center gap-1.5 text-[11px] font-medium text-indigo-400 hover:text-indigo-300 transition-colors"
+                    className="cursor-pointer inline-flex items-center gap-1.5 text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
                   >
                     <Sparkles className="h-3 w-3" />
                     <span>Try Sample Brief</span>
@@ -276,37 +300,39 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
             </div>
 
             {/* 4. COLLAPSIBLE: Profile & Verified Case Studies */}
-            <div className="rounded-xl border border-white/[0.08] bg-[#070A14] overflow-hidden transition-all shadow-md">
+            <div className="rounded-xl border border-indigo-100 bg-slate-50/60 overflow-hidden transition-all shadow-xs">
               <button
                 type="button"
                 onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-                className="cursor-pointer w-full flex items-center justify-between p-3 sm:p-3.5 text-left hover:bg-white/[0.02] transition-colors"
+                className="cursor-pointer w-full flex items-center justify-between p-3 sm:p-3.5 text-left hover:bg-indigo-50/40 transition-colors"
               >
                 <div className="flex items-center gap-2">
-                  <span className="text-xs font-bold text-white">
+                  <span className="text-xs font-bold text-slate-800">
                     Freelancer Profile &amp; Project Proof Vault
                   </span>
-                  <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2 py-0.2 text-[9.5px] sm:text-[10px] font-semibold text-emerald-400 font-mono">
+                  <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.2 text-[9.5px] sm:text-[10px] font-semibold text-emerald-700 font-mono">
                     Ready
                   </span>
                 </div>
                 <ChevronDown
-                  className={`h-4 w-4 text-slate-400 shrink-0 transition-transform duration-300 ${isAccordionOpen ? 'rotate-180 text-indigo-400' : ''
-                    }`}
+                  className={`h-4 w-4 text-slate-500 shrink-0 transition-transform duration-300 ${
+                    isAccordionOpen ? 'rotate-180 text-indigo-600' : ''
+                  }`}
                 />
               </button>
 
               <div
-                className={`grid transition-all duration-300 ease-in-out ${isAccordionOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
-                  }`}
+                className={`grid transition-all duration-300 ease-in-out ${
+                  isAccordionOpen ? 'grid-rows-[1fr] opacity-100' : 'grid-rows-[0fr] opacity-0'
+                }`}
               >
                 <div className="overflow-hidden">
-                  <div className="p-3 sm:p-3.5 pt-0 space-y-3.5 border-t border-white/[0.06]">
+                  <div className="p-3 sm:p-3.5 pt-0 space-y-3.5 border-t border-slate-200/80">
 
                     {/* Freelancer Name & Role */}
                     <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-3">
                       <div>
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono block mb-1">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono block mb-1">
                           NAME
                         </label>
                         <input
@@ -318,11 +344,11 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                             onSaveProfile(updated);
                           }}
                           placeholder="Alex Dev"
-                          className="cursor-text w-full rounded-lg border border-white/[0.08] bg-[#0B0F1A] px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/60"
+                          className="cursor-text w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
                         />
                       </div>
                       <div>
-                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono block mb-1">
+                        <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono block mb-1">
                           TITLE / PRIMARY ROLE
                         </label>
                         <input
@@ -334,14 +360,14 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                             onSaveProfile(updated);
                           }}
                           placeholder="Full-Stack Engineer & Next.js Specialist"
-                          className="cursor-text w-full rounded-lg border border-white/[0.08] bg-[#0B0F1A] px-2.5 py-1.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/60"
+                          className="cursor-text w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
                         />
                       </div>
                     </div>
 
                     {/* Bio Snippet */}
                     <div className="space-y-1">
-                      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono block">
+                      <label className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono block">
                         CORE BIO &amp; VALUE STATEMENT
                       </label>
                       <textarea
@@ -352,17 +378,17 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                           setProfile(updated);
                           onSaveProfile(updated);
                         }}
-                        className="cursor-text w-full rounded-lg border border-white/[0.08] bg-[#0B0F1A] p-2.5 text-xs text-slate-200 placeholder:text-slate-500 focus:outline-none focus:border-indigo-500/60 leading-relaxed"
+                        className="cursor-text w-full rounded-lg border border-slate-200 bg-white p-2.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500 leading-relaxed"
                       />
                     </div>
 
                     {/* Verified Project Proof with Checkbox & Edit */}
                     <div className="space-y-2">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-400 font-mono">
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
                           VERIFIED CASE STUDIES ({selectedCount}/{profile.projects.length} included)
                         </span>
-                        <span className="text-[10px] text-indigo-400 font-mono">
+                        <span className="text-[10px] text-indigo-600 font-mono font-semibold">
                           Check to include
                         </span>
                       </div>
@@ -373,10 +399,11 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                           return (
                             <div
                               key={proj.id}
-                              className={`rounded-lg border p-2.5 sm:p-3 space-y-1.5 transition-all ${isChecked
-                                  ? 'border-indigo-500/50 bg-[#0E1528]'
-                                  : 'border-white/[0.06] bg-[#0B0F1A] opacity-75'
-                                }`}
+                              className={`rounded-lg border p-2.5 sm:p-3 space-y-1.5 transition-all ${
+                                isChecked
+                                  ? 'border-indigo-300 bg-indigo-50/70 shadow-2xs'
+                                  : 'border-slate-200 bg-white opacity-85'
+                              }`}
                             >
                               <div className="flex items-start justify-between gap-2">
                                 <label
@@ -387,9 +414,9 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                                     type="checkbox"
                                     checked={isChecked}
                                     onChange={() => { }}
-                                    className="cursor-pointer h-3.5 w-3.5 rounded border-slate-700 bg-slate-900 text-indigo-600 focus:ring-0 accent-indigo-500"
+                                    className="cursor-pointer h-3.5 w-3.5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600"
                                   />
-                                  <span className="text-xs font-bold text-white truncate">
+                                  <span className="text-xs font-bold text-slate-800 truncate">
                                     #{idx + 1} {proj.title}
                                   </span>
                                 </label>
@@ -399,7 +426,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                                   <button
                                     type="button"
                                     onClick={() => onOpenEditProject(proj)}
-                                    className="cursor-pointer p-1 text-slate-400 hover:text-indigo-400 hover:bg-white/[0.05] rounded transition-colors"
+                                    className="cursor-pointer p-1 text-slate-400 hover:text-indigo-600 hover:bg-white rounded transition-colors"
                                     title="Edit project details & skills"
                                   >
                                     <Pencil className="h-3.5 w-3.5" />
@@ -407,7 +434,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                                   <button
                                     type="button"
                                     onClick={() => onDeleteProject(proj.id)}
-                                    className="cursor-pointer p-1 text-slate-400 hover:text-rose-400 hover:bg-white/[0.05] rounded transition-colors"
+                                    className="cursor-pointer p-1 text-slate-400 hover:text-rose-600 hover:bg-white rounded transition-colors"
                                     title="Delete project"
                                   >
                                     <Trash2 className="h-3.5 w-3.5" />
@@ -415,8 +442,8 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                                 </div>
                               </div>
 
-                              <div className="flex items-center gap-1.5 rounded bg-[#070A14] px-2 py-1 text-[10.5px] sm:text-[11px] font-mono text-slate-300 border border-white/[0.04]">
-                                <LinkIcon className="h-3 w-3 text-indigo-400 shrink-0" />
+                              <div className="flex items-center gap-1.5 rounded bg-white px-2 py-1 text-[10.5px] sm:text-[11px] font-mono text-slate-700 border border-slate-200">
+                                <LinkIcon className="h-3 w-3 text-indigo-500 shrink-0" />
                                 <span className="truncate">{proj.metricOrLink}</span>
                               </div>
 
@@ -424,7 +451,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                                 {proj.tags.map((t, tIdx) => (
                                   <span
                                     key={tIdx}
-                                    className="rounded bg-white/[0.04] px-2 py-0.5 text-[10px] text-slate-300 border border-white/[0.06]"
+                                    className="rounded bg-indigo-50 px-2 py-0.5 text-[10px] text-indigo-700 border border-indigo-100 font-medium"
                                   >
                                     {t}
                                   </span>
@@ -437,7 +464,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                         <button
                           type="button"
                           onClick={onOpenAddProject}
-                          className="cursor-pointer w-full rounded-lg border border-dashed border-white/[0.12] bg-white/[0.01] py-2 text-center text-xs font-semibold text-slate-300 hover:bg-white/[0.04] hover:text-white transition-colors"
+                          className="cursor-pointer w-full rounded-lg border border-dashed border-indigo-200 bg-indigo-50/30 py-2 text-center text-xs font-semibold text-indigo-700 hover:bg-indigo-50 hover:border-indigo-300 transition-colors"
                         >
                           + Add Case Study to Bank
                         </button>
@@ -454,7 +481,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                 type="button"
                 disabled={isGenerating}
                 onClick={onGenerate}
-                className="cursor-pointer disabled:cursor-not-allowed w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-500 to-violet-600 py-3 sm:py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-lg shadow-indigo-600/30 hover:from-indigo-500 hover:to-violet-500 active:scale-[0.98] transition-all disabled:opacity-50 btn-shine-effect"
+                className="cursor-pointer disabled:cursor-not-allowed w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-indigo-600 via-indigo-600 to-purple-600 hover:from-indigo-700 hover:to-purple-700 py-3 sm:py-3.5 px-4 text-xs sm:text-sm font-bold text-white shadow-lg shadow-indigo-500/25 active:scale-[0.98] transition-all disabled:opacity-50 btn-shine-effect"
               >
                 {isGenerating ? (
                   <>
@@ -470,7 +497,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                 )}
               </button>
 
-              <p className="text-center text-[10.5px] sm:text-[11px] text-slate-400">
+              <p className="text-center text-[11px] text-slate-500">
                 100% dynamic AI generation with zero canned templates.
               </p>
             </div>
@@ -484,11 +511,11 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
         {/* ==================================================== */}
         <section className="lg:col-span-7 space-y-3 sm:space-y-4 lg:sticky lg:top-20 lg:self-start transition-all" aria-label="Generated Proposal Output">
 
-          <div className="rounded-2xl border border-white/[0.08] bg-[#0B0F1A] p-3.5 sm:p-5 shadow-2xl space-y-3.5 sm:space-y-4 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between backdrop-blur-xs">
+          <div className="rounded-2xl border border-indigo-100/90 bg-white p-4 sm:p-5 shadow-2xl shadow-indigo-500/8 space-y-4 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between">
 
             <div>
-              {/* Top Tab Bar inside Card - 3-Column Responsive Control */}
-              <div className="grid grid-cols-3 gap-1 sm:gap-1.5 border-b border-white/[0.08] pb-2.5">
+              {/* Top Tab Bar inside Card */}
+              <div className="grid grid-cols-3 gap-1 sm:gap-1.5 border-b border-slate-200 pb-3">
                 {[
                   { id: 'var-a', short: 'Variation A', full: 'Variation A (Problem-First Fix)' },
                   { id: 'var-b', short: 'Variation B', full: 'Variation B (Consultative Loom)' },
@@ -498,10 +525,11 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                     key={t.id}
                     type="button"
                     onClick={() => setActiveTab(t.id as any)}
-                    className={`cursor-pointer rounded-lg py-1.5 sm:py-2 px-1 sm:px-2.5 text-center text-xs font-semibold transition-all duration-200 ${activeTab === t.id
-                        ? 'bg-[#181F33] text-white shadow-xs border border-white/[0.1] scale-[1.01]'
-                        : 'text-slate-400 hover:text-slate-200 hover:bg-white/[0.02]'
-                      }`}
+                    className={`cursor-pointer rounded-lg py-1.5 sm:py-2 px-1 sm:px-2.5 text-center text-xs font-semibold transition-all duration-200 ${
+                      activeTab === t.id
+                        ? 'bg-indigo-600 text-white shadow-xs scale-[1.01]'
+                        : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
+                    }`}
                   >
                     <span className="sm:hidden text-[11px] font-bold block truncate">{t.short}</span>
                     <span className="hidden sm:inline font-bold">{t.full}</span>
@@ -511,19 +539,19 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
 
               {/* Error Alert Box */}
               {errorMessage && (
-                <div className="mt-3 rounded-xl border border-rose-500/30 bg-rose-500/10 p-3 sm:p-3.5 space-y-2 animate-fade-in-up">
-                  <div className="flex items-center gap-2 text-rose-300 font-bold text-xs">
-                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-400" />
+                <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 sm:p-3.5 space-y-2 animate-fade-in-up">
+                  <div className="flex items-center gap-2 text-rose-700 font-bold text-xs">
+                    <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                     <span>Proposal Generation Notice</span>
                   </div>
-                  <p className="text-xs text-rose-200/90 leading-relaxed">
+                  <p className="text-xs text-rose-800 leading-relaxed">
                     {errorMessage}
                   </p>
                   <div className="pt-1">
                     <button
                       type="button"
                       onClick={onOpenSettings}
-                      className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-rose-600/80 hover:bg-rose-600 px-3 py-1 text-xs font-bold text-white shadow-xs transition-all hover:scale-[1.02]"
+                      className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 px-3 py-1 text-xs font-bold text-white shadow-xs transition-all hover:scale-[1.02]"
                     >
                       <Key className="h-3 w-3" />
                       <span>Configure Gemini API Key in Settings</span>
@@ -535,42 +563,37 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
               {/* GENERATING SKELETON STATE */}
               {isGenerating ? (
                 <div className="py-6 sm:py-8 space-y-5 max-w-xl mx-auto animate-slide-fade">
-                  <div className="flex items-center justify-between p-3 rounded-xl border border-indigo-500/30 bg-indigo-500/10">
+                  <div className="flex items-center justify-between p-3 rounded-xl border border-indigo-200 bg-indigo-50">
                     <div className="flex items-center gap-2.5">
                       <span className="relative flex h-3 w-3">
-                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-400 opacity-75" />
-                        <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-500" />
+                        <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-indigo-500 opacity-75" />
+                        <span className="relative inline-flex rounded-full h-3 w-3 bg-indigo-600" />
                       </span>
-                      <span className="text-xs font-bold text-indigo-200">
+                      <span className="text-xs font-bold text-indigo-900">
                         Synthesizing Problem-First Proposal via Gemini AI...
                       </span>
                     </div>
-                    <span className="text-[10px] font-mono text-indigo-300 animate-pulse">
+                    <span className="text-[10px] font-mono text-indigo-700 font-semibold animate-pulse">
                       Analyzing brief
                     </span>
                   </div>
 
                   {/* Shimmer skeleton blocks */}
                   <div className="space-y-3.5 pt-1">
-                    <div className="h-4 rounded-md w-3/4 animate-shimmer-bar" />
-                    <div className="h-3.5 rounded-md w-full animate-shimmer-bar" />
-                    <div className="h-3.5 rounded-md w-5/6 animate-shimmer-bar" />
-                    <div className="h-3.5 rounded-md w-4/5 animate-shimmer-bar" />
+                    <div className="h-4 rounded-md w-3/4 animate-shimmer-bar bg-slate-200" />
+                    <div className="h-3.5 rounded-md w-full animate-shimmer-bar bg-slate-200" />
+                    <div className="h-3.5 rounded-md w-5/6 animate-shimmer-bar bg-slate-200" />
+                    <div className="h-3.5 rounded-md w-4/5 animate-shimmer-bar bg-slate-200" />
                   </div>
 
-                  <div className="p-3.5 rounded-xl border border-white/[0.06] bg-[#070A14] space-y-2.5">
+                  <div className="p-3.5 rounded-xl border border-slate-200 bg-slate-50 space-y-2.5">
                     <div className="flex items-center gap-2">
-                      <span className="h-2 w-2 rounded-full bg-emerald-400 animate-pulse" />
-                      <span className="text-[11px] font-semibold text-slate-300">
+                      <span className="h-2 w-2 rounded-full bg-emerald-500 animate-pulse" />
+                      <span className="text-[11px] font-semibold text-slate-700">
                         Matching case study proof &amp; verified metrics...
                       </span>
                     </div>
-                    <div className="h-3 rounded w-2/3 animate-shimmer-bar" />
-                  </div>
-
-                  <div className="space-y-2.5 pt-1">
-                    <div className="h-3.5 rounded-md w-11/12 animate-shimmer-bar" />
-                    <div className="h-3.5 rounded-md w-2/3 animate-shimmer-bar" />
+                    <div className="h-3 rounded w-2/3 animate-shimmer-bar bg-slate-200" />
                   </div>
                 </div>
               ) : !generatedPitches && !errorMessage ? (
@@ -579,15 +602,15 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
 
                   {/* Top Status & Title */}
                   <div className="text-center space-y-2 pt-1">
-                    <div className="mx-auto flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-indigo-500/20 to-violet-500/10 text-indigo-400 border border-indigo-500/30 shadow-sm">
+                    <div className="mx-auto flex h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-2xl bg-indigo-50 text-indigo-600 border border-indigo-100 shadow-xs">
                       <Sliders className="h-5 w-5" />
                     </div>
 
                     <div className="space-y-1">
-                      <h2 className="text-sm sm:text-base font-bold text-white">
+                      <h2 className="text-sm sm:text-base font-bold text-slate-900">
                         Your high-converting proposal is 1 click away
                       </h2>
-                      <p className="text-xs text-slate-400 leading-relaxed max-w-md mx-auto">
+                      <p className="text-xs text-slate-600 leading-relaxed max-w-md mx-auto">
                         UpPitch extracts the client&apos;s real-world technical problem and synthesizes two distinct high-converting bids backed by your verified project metrics.
                       </p>
                     </div>
@@ -597,39 +620,39 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                   <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-1">
 
                     {/* Angle 1 Card */}
-                    <div className="rounded-xl border border-white/[0.08] bg-[#070A14] p-3 sm:p-3.5 space-y-2 hover:border-indigo-500/40 transition-all card-hover-lift">
+                    <div className="rounded-xl border border-indigo-100 bg-slate-50/70 p-3 sm:p-3.5 space-y-2 hover:border-indigo-300 hover:bg-white transition-all card-hover-lift">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-300 font-mono flex items-center gap-1">
-                          <Sparkles className="h-3 w-3 text-indigo-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-indigo-700 font-mono flex items-center gap-1">
+                          <Sparkles className="h-3 w-3 text-indigo-600" />
                           <span>VARIATION A</span>
                         </span>
-                        <span className="rounded bg-indigo-500/10 px-1.5 py-0.2 text-[9px] font-mono text-indigo-300 border border-indigo-500/20">
+                        <span className="rounded bg-indigo-100 px-1.5 py-0.2 text-[9px] font-mono font-bold text-indigo-700">
                           Direct Fix
                         </span>
                       </div>
-                      <h3 className="text-xs font-bold text-white">
+                      <h3 className="text-xs font-bold text-slate-900">
                         Problem-First Solution
                       </h3>
-                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
                         Leads in the opening sentence with the client&apos;s exact technical bug, commit timeline, and verified metrics.
                       </p>
                     </div>
 
                     {/* Angle 2 Card */}
-                    <div className="rounded-xl border border-white/[0.08] bg-[#070A14] p-3 sm:p-3.5 space-y-2 hover:border-violet-500/40 transition-all card-hover-lift">
+                    <div className="rounded-xl border border-purple-100 bg-slate-50/70 p-3 sm:p-3.5 space-y-2 hover:border-purple-300 hover:bg-white transition-all card-hover-lift">
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase tracking-wider text-violet-300 font-mono flex items-center gap-1">
-                          <Video className="h-3 w-3 text-violet-400" />
+                        <span className="text-[10px] font-bold uppercase tracking-wider text-purple-700 font-mono flex items-center gap-1">
+                          <Video className="h-3 w-3 text-purple-600" />
                           <span>VARIATION B</span>
                         </span>
-                        <span className="rounded bg-violet-500/10 px-1.5 py-0.2 text-[9px] font-mono text-violet-300 border border-violet-500/20">
+                        <span className="rounded bg-purple-100 px-1.5 py-0.2 text-[9px] font-mono font-bold text-purple-700">
                           Consultative
                         </span>
                       </div>
-                      <h3 className="text-xs font-bold text-white">
+                      <h3 className="text-xs font-bold text-slate-900">
                         Consultant &amp; Loom CTA
                       </h3>
-                      <p className="text-[11px] text-slate-300 leading-relaxed">
+                      <p className="text-[11px] text-slate-600 leading-relaxed">
                         Explores architecture &amp; edge cases, closing with a low-friction 3-minute Loom video walkthrough offer.
                       </p>
                     </div>
@@ -638,22 +661,22 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
 
                   {/* 3 Quick Step Guide */}
                   <div className="space-y-1.5 text-left pt-1">
-                    <div className="flex items-center gap-2 rounded-lg border border-white/[0.04] bg-white/[0.015] p-2 text-xs text-slate-300">
-                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[9px] font-bold text-indigo-300 font-mono">
+                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs text-slate-700">
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[9px] font-bold text-indigo-700 font-mono">
                         1
                       </span>
                       <span className="truncate">Paste any Upwork job post, client brief, or RFP</span>
                     </div>
 
-                    <div className="flex items-center gap-2 rounded-lg border border-white/[0.04] bg-white/[0.015] p-2 text-xs text-slate-300">
-                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[9px] font-bold text-indigo-300 font-mono">
+                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs text-slate-700">
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[9px] font-bold text-indigo-700 font-mono">
                         2
                       </span>
                       <span className="truncate">Select target outreach channel &amp; strategic tone</span>
                     </div>
 
-                    <div className="flex items-center gap-2 rounded-lg border border-white/[0.04] bg-white/[0.015] p-2 text-xs text-slate-300">
-                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-slate-800 text-[9px] font-bold text-indigo-300 font-mono">
+                    <div className="flex items-center gap-2 rounded-lg border border-slate-200 bg-slate-50 p-2 text-xs text-slate-700">
+                      <span className="flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-indigo-100 text-[9px] font-bold text-indigo-700 font-mono">
                         3
                       </span>
                       <span className="truncate">Include 1 to 2 case studies from your project bank for instant proof</span>
@@ -661,20 +684,20 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                   </div>
 
                   {/* Live Strategy & Action Pill */}
-                  <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-white/[0.06] text-[11px] font-mono text-slate-400">
+                  <div className="pt-2 flex flex-wrap items-center justify-between gap-2 border-t border-slate-200 text-[11px] font-mono text-slate-600">
                     <div className="flex items-center gap-2">
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
-                      <span>Mode: <strong className="text-white capitalize">{channel}</strong></span>
-                      <span className="text-slate-600">/</span>
-                      <span>Tone: <strong className="text-indigo-300 capitalize">{tone}</strong></span>
-                      <span className="text-slate-600">/</span>
-                      <span>Proof: <strong className="text-emerald-300">{selectedCount} Projects</strong></span>
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-500 animate-pulse" />
+                      <span>Mode: <strong className="text-slate-900 capitalize">{channel}</strong></span>
+                      <span className="text-slate-400">/</span>
+                      <span>Tone: <strong className="text-indigo-700 capitalize">{tone}</strong></span>
+                      <span className="text-slate-400">/</span>
+                      <span>Proof: <strong className="text-emerald-700">{selectedCount} Projects</strong></span>
                     </div>
 
                     <button
                       type="button"
                       onClick={onLoadSampleBrief}
-                      className="cursor-pointer inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-400 hover:text-indigo-300 transition-colors"
+                      className="cursor-pointer inline-flex items-center gap-1 text-[11px] font-semibold text-indigo-600 hover:text-indigo-700 transition-colors"
                     >
                       <Sparkles className="h-3 w-3" />
                       <span>Load Sample Brief</span>
@@ -685,16 +708,16 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
               ) : activeTab === 'portfolio' ? (
                 /* MICRO-PORTFOLIO PREVIEW VIEW */
                 <div className="py-4 sm:py-6 space-y-4 animate-slide-fade">
-                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-white/[0.06]">
+                  <div className="flex flex-wrap items-center justify-between gap-2 pb-2 border-b border-slate-200">
                     <div>
-                      <h3 className="text-xs font-bold text-white">
+                      <h3 className="text-xs font-bold text-slate-900">
                         Client-Facing Matched Case Studies
                       </h3>
-                      <p className="text-[10.5px] sm:text-[11px] text-slate-400">
+                      <p className="text-[10.5px] sm:text-[11px] text-slate-500">
                         Verified projects woven into this proposal
                       </p>
                     </div>
-                    <span className="rounded-full bg-emerald-500/10 border border-emerald-500/30 px-2.5 py-0.5 text-xs text-emerald-400 font-mono font-bold">
+                    <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-xs text-emerald-700 font-mono font-bold">
                       {selectedCount > 0 ? `${selectedCount} Project(s) Selected` : 'Profile Overview'}
                     </span>
                   </div>
@@ -705,10 +728,10 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                       .map((p) => (
                         <div
                           key={p.id}
-                          className="rounded-xl border border-white/[0.08] bg-[#070A14] p-3.5 sm:p-4 space-y-2 card-hover-lift"
+                          className="rounded-xl border border-indigo-100 bg-slate-50/70 p-3.5 sm:p-4 space-y-2 card-hover-lift"
                         >
-                          <h4 className="text-xs font-bold text-white">{p.title}</h4>
-                          <div className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+                          <h4 className="text-xs font-bold text-slate-900">{p.title}</h4>
+                          <div className="flex items-center gap-1.5 text-xs text-emerald-700 font-mono">
                             <LinkIcon className="h-3 w-3 shrink-0" />
                             <span className="truncate">{p.metricOrLink}</span>
                           </div>
@@ -716,7 +739,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                             {p.tags.map((t, idx) => (
                               <span
                                 key={idx}
-                                className="rounded bg-white/[0.04] px-2 py-0.5 text-[10px] text-slate-300 border border-white/[0.06]"
+                                className="rounded bg-white px-2 py-0.5 text-[10px] text-slate-700 border border-slate-200"
                               >
                                 {t}
                               </span>
@@ -730,13 +753,13 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                 /* LIVE GENERATED PITCH VIEW */
                 <div className="py-3 sm:py-4 space-y-3 sm:space-y-4 animate-slide-fade">
                   {/* Toolbar */}
-                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-white/[0.06]">
+                  <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5 pb-2.5 border-b border-slate-200">
                     <div className="flex items-center justify-between sm:justify-start gap-1.5 w-full sm:w-auto">
                       <div className="flex items-center gap-1.5">
                         <button
                           type="button"
                           onClick={handleShorten}
-                          className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
+                          className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                         >
                           <Scissors className="h-3 w-3" />
                           <span>Shorten 30%</span>
@@ -744,7 +767,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                         <button
                           type="button"
                           onClick={handleAddLoom}
-                          className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
+                          className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                         >
                           <Video className="h-3 w-3" />
                           <span>+ Loom Hook</span>
@@ -754,10 +777,10 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                       {/* Mobile Word Count Badge */}
                       <span className={`sm:hidden text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
                         wordCount > 0 && wordCount <= 140
-                          ? 'text-emerald-300 bg-emerald-500/15 border border-emerald-500/30'
+                          ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
                           : wordCount > 140
-                          ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
-                          : 'text-slate-400'
+                          ? 'text-amber-700 bg-amber-50 border border-amber-200'
+                          : 'text-slate-600'
                       }`}>
                         {wordCount}w {wordCount > 0 && wordCount <= 140 ? '✓' : ''}
                       </span>
@@ -767,17 +790,17 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                       {/* Desktop Word Count Badge */}
                       <span className={`hidden sm:inline-block text-[11px] font-mono px-2 py-0.5 rounded transition-colors ${
                         wordCount > 0 && wordCount <= 140
-                          ? 'text-emerald-300 bg-emerald-500/15 border border-emerald-500/30'
+                          ? 'text-emerald-700 bg-emerald-50 border border-emerald-200'
                           : wordCount > 140
-                          ? 'text-amber-300 bg-amber-500/10 border border-amber-500/25'
-                          : 'text-slate-400'
+                          ? 'text-amber-700 bg-amber-50 border border-amber-200'
+                          : 'text-slate-600'
                       }`}>
                         {wordCount} words {wordCount > 0 && wordCount <= 140 ? '✓ optimal' : ''}
                       </span>
                       <button
                         type="button"
                         onClick={onGenerate}
-                        className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-white/[0.08] bg-white/[0.03] px-2.5 py-1 text-[11px] font-medium text-slate-300 hover:bg-white/[0.07] transition-colors"
+                        className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition-colors"
                       >
                         <RotateCw className="h-3 w-3" />
                         <span>Regenerate</span>
@@ -785,10 +808,11 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                       <button
                         type="button"
                         onClick={handleCopy}
-                        className={`cursor-pointer inline-flex items-center gap-1.5 rounded-lg px-3 py-1 text-xs font-bold transition-all ${copied
+                        className={`cursor-pointer inline-flex items-center gap-1.5 rounded-lg px-3.5 py-1 text-xs font-bold transition-all ${
+                          copied
                             ? 'bg-emerald-600 text-white shadow-xs'
-                            : 'bg-indigo-600 text-white hover:bg-indigo-500 shadow-xs'
-                          }`}
+                            : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-xs'
+                        }`}
                       >
                         {copied ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
                         <span>{copied ? 'Copied ✓' : 'Copy'}</span>
@@ -798,9 +822,9 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
 
                   {/* Subject Line for Cold Email */}
                   {channel === 'cold-email' && generatedPitches?.subjectLine && (
-                    <div className="rounded-lg border border-white/[0.08] bg-[#070A14] p-2.5 text-xs flex items-center gap-2">
-                      <span className="font-bold text-indigo-400 shrink-0">Subject:</span>
-                      <span className="text-white font-medium truncate">{generatedPitches.subjectLine}</span>
+                    <div className="rounded-lg border border-indigo-100 bg-indigo-50/70 p-2.5 text-xs flex items-center gap-2">
+                      <span className="font-bold text-indigo-700 shrink-0">Subject:</span>
+                      <span className="text-slate-900 font-medium truncate">{generatedPitches.subjectLine}</span>
                     </div>
                   )}
 
@@ -815,18 +839,18 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                         setEditableVarB(e.target.value);
                       }
                     }}
-                    className="cursor-text w-full bg-[#070A14] border border-white/[0.08] rounded-xl p-3.5 sm:p-4 text-xs sm:text-[13px] text-slate-100 leading-relaxed focus:outline-none focus:border-indigo-500/60 resize-y font-normal"
+                    className="cursor-text w-full bg-slate-50/80 border border-slate-200 rounded-xl p-3.5 sm:p-4 text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:bg-white focus:outline-none focus:border-indigo-500 resize-y font-normal"
                   />
                 </div>
               )}
             </div>
 
             {/* Bottom Right Brand Mark */}
-            <div className="flex justify-end pt-3 sm:pt-4 border-t border-white/[0.06]">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-white/[0.08] bg-white/[0.02] px-3 py-1 text-[10px] text-slate-400 font-mono">
+            <div className="flex justify-end pt-3 sm:pt-4 border-t border-slate-200">
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50/50 px-3 py-1 text-[10px] text-slate-600 font-mono">
                 <span>Built for Freelancers by</span>
-                <span className="font-bold text-white flex items-center gap-1">
-                  <span className="h-1.5 w-1.5 rounded-full bg-indigo-500" /> Hammad
+                <span className="font-bold text-slate-900 flex items-center gap-1">
+                  <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" /> Hammad
                 </span>
               </div>
             </div>

@@ -148,7 +148,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className="dark">
+    <html lang="en" className="light">
       <head>
         <meta
           name="google-site-verification"
@@ -159,7 +159,7 @@ export default function RootLayout({
           dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLdSchema) }}
         />
       </head>
-      <body className="min-h-screen bg-[#050811] text-slate-100 antialiased selection:bg-indigo-500/20 selection:text-indigo-300">
+      <body className="min-h-screen bg-[#F8F9FE] text-slate-900 antialiased selection:bg-indigo-500/20 selection:text-indigo-600">
         {children}
       </body>
     </html>

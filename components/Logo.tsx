@@ -5,12 +5,14 @@ interface LogoProps {
   className?: string;
   showTagline?: boolean;
   size?: 'sm' | 'md' | 'lg';
+  theme?: 'light' | 'dark';
 }
 
 export const Logo: React.FC<LogoProps> = React.memo(({
   className = '',
   showTagline = true,
   size = 'md',
+  theme = 'light',
 }) => {
   const iconSizes = {
     sm: 'h-8 w-8',
@@ -24,11 +26,13 @@ export const Logo: React.FC<LogoProps> = React.memo(({
     lg: 'text-xl sm:text-2xl',
   };
 
+  const isLight = theme === 'light';
+
   return (
     <div className={`flex items-center gap-3 select-none ${className}`}>
-      {/* Icon Mark: Squircle with Indigo-to-Violet gradient & neon glow */}
+      {/* Icon Mark: Squircle with Indigo-to-Violet gradient & subtle glow */}
       <div
-        className={`relative flex ${iconSizes[size]} shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-violet-700 shadow-lg shadow-indigo-500/25 border border-white/20 transition-transform hover:scale-105`}
+        className={`relative flex ${iconSizes[size]} shrink-0 items-center justify-center rounded-xl bg-gradient-to-br from-indigo-500 via-indigo-600 to-purple-700 shadow-md shadow-indigo-500/25 border border-white/30 transition-transform hover:scale-105`}
       >
         <svg
           viewBox="0 0 24 24"
@@ -56,14 +60,14 @@ export const Logo: React.FC<LogoProps> = React.memo(({
         </svg>
 
         {/* Subtle glowing highlight */}
-        <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-transparent via-white/5 to-white/20 pointer-events-none" />
+        <div className="absolute inset-0 rounded-xl bg-gradient-to-t from-transparent via-white/10 to-white/30 pointer-events-none" />
       </div>
 
-      {/* Wordmark: Up (white) + Pitch (indigo-400) */}
+      {/* Wordmark: Up + Pitch */}
       <div className="flex flex-col">
         <div className="flex items-center gap-1.5">
-          <span className={`font-black tracking-tight text-white ${textSizes[size]}`}>
-            Up<span className="text-indigo-400">Pitch</span>
+          <span className={`font-black tracking-tight ${isLight ? 'text-slate-900' : 'text-white'} ${textSizes[size]}`}>
+            Up<span className={isLight ? 'text-indigo-600' : 'text-indigo-400'}>Pitch</span>
           </span>
           {/* Pulsing indicator dot */}
           <span className="relative flex h-2 w-2">
@@ -73,7 +77,7 @@ export const Logo: React.FC<LogoProps> = React.memo(({
         </div>
 
         {showTagline && (
-          <span className="hidden md:inline text-[10px] sm:text-[11px] font-medium text-slate-400 tracking-normal truncate">
+          <span className={`text-[10px] sm:text-[11px] font-medium ${isLight ? 'text-slate-500' : 'text-slate-400'} tracking-normal truncate`}>
             Smart Proposals for Upwork &amp; Outreach
           </span>
         )}

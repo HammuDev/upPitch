@@ -5,10 +5,10 @@ import React, { useState, useEffect, useCallback } from 'react';
 import { Header } from '@/components/Header';
 import { HeroHeader } from '@/components/HeroHeader';
 import { Workspace } from '@/components/Workspace';
-import { RecentPitches } from '@/components/RecentPitches';
-import { RuleTicker } from '@/components/RuleTicker';
-import { SeoFeatures } from '@/components/SeoFeatures';
-import { ComparisonTable } from '@/components/ComparisonTable';
+import { PurposeBuiltSection } from '@/components/PurposeBuiltSection';
+import { ComparisonSection } from '@/components/ComparisonSection';
+import { ConversionSection } from '@/components/ConversionSection';
+import { TestimonialsSection } from '@/components/TestimonialsSection';
 import { FaqSection } from '@/components/FaqSection';
 import { Footer } from '@/components/Footer';
 import { AmbientBackground } from '@/components/AmbientBackground';
@@ -132,7 +132,6 @@ export default function Home() {
     setIsGenerating(true);
     setErrorMessage(null);
 
-    // Filter ONLY the projects currently selected by the user
     const selectedProjects = profile.projects.filter((p) =>
       selectedProjectIds.includes(p.id)
     );
@@ -148,7 +147,6 @@ export default function Home() {
 
       setGeneratedPitches(res);
 
-      // Save to history
       const newHistoryItem: HistoryItem = {
         id: 'hist-' + Date.now(),
         timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
@@ -181,6 +179,19 @@ export default function Home() {
     setErrorMessage(null);
   }, []);
 
+  const handleLoadSampleProposal = useCallback((proposalText: string) => {
+    handleLoadSampleBrief();
+    setGeneratedPitches({
+      'var-a': proposalText,
+      'var-b': `Hi there,\n\nI reviewed your brief regarding the duplicate Stripe billing race condition. Having analyzed similar multi-tenant billing pipelines, this is typically caused by webhook concurrency without an atomic distributed lock.\n\n• Inspect: Audit PostgreSQL isolation level during concurrent webhook handling.\n• Implement: Redis-backed distributed lock with idempotent key verification.\n• Test: Run 100-event concurrent staging simulation.\n\nWould you be open to a 3-minute video breakdown of our reference architecture?\n\nBest regards,\nAlex Dev\nFull-Stack Engineer`,
+      detectedProblems: [
+        'Stripe webhook race condition during concurrent checkouts',
+        'Duplicate customer billing records in database',
+        'Urgent 24-48h turnaround requirement in staging'
+      ],
+    });
+  }, [handleLoadSampleBrief]);
+
   const handleLoadPitchFromHistory = useCallback((item: HistoryItem) => {
     setChannel(item.channel);
     setTone(item.tone);
@@ -200,10 +211,22 @@ export default function Home() {
     }
   }, []);
 
-  return (
-    <div className="relative min-h-screen flex flex-col bg-[#050811] text-slate-100 selection:bg-indigo-500/20 selection:text-indigo-300 overflow-x-hidden">
+  const scrollToWorkspace = useCallback(() => {
+    const el = document.getElementById('workspace');
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth' });
+      // Also focus the textarea for instant user delight
+      setTimeout(() => {
+        const textarea = el.querySelector('textarea');
+        if (textarea) textarea.focus();
+      }, 400);
+    }
+  }, []);
 
-      {/* Background Animated Gradient Mesh */}
+  return (
+    <div className="relative min-h-screen flex flex-col bg-[#F8F9FE] text-slate-900 selection:bg-indigo-500/20 selection:text-indigo-700 overflow-x-clip">
+
+      {/* Background Animated Gradient Mesh with 3D Crystals & Waves */}
       <AmbientBackground />
 
       {/* 1. Header Navigation Bar */}
@@ -213,11 +236,17 @@ export default function Home() {
         onOpenSettings={handleOpenSettings}
       />
 
-      {/* 2. Hero Header Section with SEO H1 */}
-      <HeroHeader savedPitchesCount={history.length} />
+      {/* 2. Hero Header Section (2-Column Studio Layout matching template) */}
+      <HeroHeader
+        savedPitchesCount={history.length}
+        onLoadSampleBrief={handleLoadSampleBrief}
+        onScrollToWorkspace={scrollToWorkspace}
+      />
 
-      {/* 3. Main Two-Column Workspace Tool */}
-      <main className="flex-1 relative z-10">
+      {/* Main Page Content */}
+      <main className="flex-1 relative z-10 space-y-4 sm:space-y-6">
+        
+        {/* 3. Main Workspace Proposal Generator Tool (100% Functionality Intact) */}
         <ScrollReveal delay={50}>
           <Workspace
             channel={channel}
@@ -243,37 +272,37 @@ export default function Home() {
           />
         </ScrollReveal>
 
-        {/* 4. Recent Pitches Archive */}
-        <ScrollReveal delay={100}>
-          <RecentPitches
-            history={history}
-            onOpenHistory={handleOpenHistory}
-            onLoadPitch={handleLoadPitchFromHistory}
+        {/* 4. Purpose-Built for High-Ticket Clients (Matching Mockup Section 2) */}
+        <ScrollReveal delay={50}>
+          <PurposeBuiltSection
+            onLoadSampleProposal={handleLoadSampleProposal}
+            onScrollToWorkspace={scrollToWorkspace}
           />
         </ScrollReveal>
 
-        {/* 5. Golden Rule Ticker */}
+        {/* 5. Why Generic ChatGPT Proposals Get Rejected (3 Cards Comparison) */}
         <ScrollReveal delay={50}>
-          <RuleTicker />
+          <ComparisonSection />
         </ScrollReveal>
 
-        {/* 6. Comprehensive SEO Features & Framework */}
-        <ScrollReveal delay={100}>
-          <SeoFeatures />
+        {/* 6. Why UpPitch Converts & Engineered for Top 1% (Matching Mockup Sections 3 & 4) */}
+        <ScrollReveal delay={50}>
+          <ConversionSection />
         </ScrollReveal>
 
-        {/* 7. Benchmark Comparison Matrix */}
-        <ScrollReveal delay={100}>
-          <ComparisonTable />
+        {/* 7. Real People. Real Results. Testimonials Interactive Carousel */}
+        <ScrollReveal delay={50}>
+          <TestimonialsSection />
         </ScrollReveal>
 
-        {/* 8. Frequently Asked Questions (FAQ) */}
-        <ScrollReveal delay={100}>
+        {/* 8. Frequently Asked Questions with 3D Artwork (Matching Mockup Section 6) */}
+        <ScrollReveal delay={50}>
           <FaqSection />
         </ScrollReveal>
+
       </main>
 
-      {/* 9. Comprehensive SEO Footer */}
+      {/* 9. Comprehensive SEO Dark Footer (Matching Mockup Section 7) */}
       <Footer />
 
       {/* Modals & Drawers */}

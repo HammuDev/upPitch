@@ -52,8 +52,8 @@ export const ScrollReveal: React.FC<ScrollRevealProps> = memo(
           transitionDuration: '300ms',
           transitionDelay: `${delay}ms`,
         }}
-        className={`transition-opacity transition-transform ease-out transform-gpu ${
-          isVisible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-2'
+        className={`transition-opacity duration-300 ${
+          isVisible ? 'opacity-100' : 'opacity-0'
         } ${className}`}
       >
         {children}

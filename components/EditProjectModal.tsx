@@ -47,24 +47,24 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
   };
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/80 backdrop-blur-md p-3.5 sm:p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-lg rounded-2xl border border-white/[0.1] bg-[#0B0F1A] p-5 sm:p-6 shadow-2xl space-y-4 max-h-[95vh] overflow-y-auto animate-modal-scale">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-3.5 sm:p-4 animate-in fade-in duration-200">
+      <div className="w-full max-w-lg rounded-2xl border border-indigo-100 bg-white p-5 sm:p-6 shadow-2xl shadow-indigo-500/10 space-y-4 max-h-[95vh] overflow-y-auto animate-modal-scale">
         
         {/* Header */}
-        <div className="flex items-center justify-between pb-3 border-b border-white/[0.06]">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2.5">
-            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-500/10 text-indigo-400">
+            <div className="flex h-8 w-8 items-center justify-center rounded-lg bg-indigo-50 text-indigo-600 border border-indigo-200">
               <Pencil className="h-4 w-4" />
             </div>
             <div>
-              <h3 className="text-sm font-bold text-white">Edit Case Study / Project</h3>
-              <p className="text-[11px] text-slate-400">Update proof details and tech stack tags</p>
+              <h3 className="text-sm font-bold text-slate-900">Edit Case Study / Project</h3>
+              <p className="text-[11px] text-slate-500">Update proof details and tech stack tags</p>
             </div>
           </div>
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer text-slate-400 hover:text-white hover:bg-white/[0.05] rounded-lg p-1.5 transition-colors"
+            className="cursor-pointer text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1.5 transition-colors"
           >
             <X className="h-4 w-4" />
           </button>
@@ -75,7 +75,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
           
           {/* Project Title */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">
+            <label className="block text-slate-700 font-semibold mb-1">
               Project Title *
             </label>
             <input
@@ -84,13 +84,13 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
               value={title}
               onChange={(e) => setTitle(e.target.value)}
               placeholder="e.g. Rebuilt payment gateway & webhook pipeline"
-              className="cursor-text w-full rounded-xl border border-white/[0.08] bg-[#070A14] px-3.5 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 text-xs"
+              className="cursor-text w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 text-xs"
             />
           </div>
 
           {/* Measurable Metric */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">
+            <label className="block text-slate-700 font-semibold mb-1">
               Measurable Metric or Proof Link *
             </label>
             <input
@@ -99,13 +99,13 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
               value={metricOrLink}
               onChange={(e) => setMetricOrLink(e.target.value)}
               placeholder="e.g. 0.8s load time & $1.5M processed"
-              className="cursor-text w-full rounded-xl border border-white/[0.08] bg-[#070A14] px-3.5 py-2.5 text-white placeholder:text-slate-500 focus:outline-none focus:border-indigo-500 text-xs"
+              className="cursor-text w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 text-xs"
             />
           </div>
 
           {/* Intelligent Skill Tags Selector with Autocomplete */}
           <div>
-            <label className="block text-slate-300 font-semibold mb-1">
+            <label className="block text-slate-700 font-semibold mb-1">
               Tech Stack &amp; Skills Tagged (Used for AI Matching)
             </label>
             <SkillTagInput
@@ -116,17 +116,17 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
           </div>
 
           {/* Actions */}
-          <div className="flex items-center justify-end gap-2 pt-3 border-t border-white/[0.06]">
+          <div className="flex items-center justify-end gap-2 pt-3 border-t border-slate-100">
             <button
               type="button"
               onClick={onClose}
-              className="cursor-pointer rounded-lg px-3.5 py-2 font-medium text-slate-400 hover:text-white transition-colors"
+              className="cursor-pointer rounded-lg px-3.5 py-2 font-medium text-slate-600 hover:text-slate-900 hover:bg-slate-100 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
-              className="cursor-pointer rounded-lg bg-indigo-600 hover:bg-indigo-500 px-4 py-2 font-semibold text-white shadow-md shadow-indigo-500/20 transition-all"
+              className="cursor-pointer rounded-lg bg-indigo-600 hover:bg-indigo-700 px-4 py-2 font-semibold text-white shadow-md shadow-indigo-500/20 transition-all"
             >
               Save Changes
             </button>
