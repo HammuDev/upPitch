@@ -236,6 +236,10 @@ export const TestimonialsSection: React.FC = memo(() => {
                       <img
                         src={item.avatar}
                         alt={item.name}
+                        width="44"
+                        height="44"
+                        loading="lazy"
+                        decoding="async"
                         className="h-10 w-10 sm:h-11 sm:w-11 rounded-full object-cover ring-2 ring-indigo-100 shrink-0 shadow-xs"
                       />
                       <div className="min-w-0">

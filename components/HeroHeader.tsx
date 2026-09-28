@@ -184,7 +184,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
                    C 10,520 50,400 190,340 
                    C 340,280 410,80 660,60 Z"
                 fill="url(#uncroppedPurpleGrad)"
-                style={{ filter: 'drop-shadow(0 25px 50px rgba(168, 85, 247, 0.28))' }}
+                className="opacity-95"
               />
 
               {/* Inner Luminous Silk Flow */}
@@ -204,12 +204,15 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
           {/* ======================================================= */}
           {/* 3D UPWORK EMERALD GREEN SQUIRCLE (FLOATING TOP-LEFT)    */}
           {/* ======================================================= */}
-          <div className="absolute -top-5 -left-2 sm:-top-8 sm:-left-5 z-30 w-13 h-13 sm:w-18 sm:h-18 animate-float-subtle">
+          <div className="absolute -top-5 -left-2 sm:-top-8 sm:-left-5 z-30 w-13 h-13 sm:w-18 sm:h-18 md:animate-float-subtle">
             <div className="relative w-full h-full rounded-[18px] sm:rounded-[24px] bg-gradient-to-br from-[#22c55e] via-[#16a34a] to-[#15803d] p-[2px] sm:p-[2.5px] shadow-[0_16px_36px_rgba(22,163,74,0.55),0_0_0_1px_rgba(255,255,255,0.45)_inset] -rotate-12 flex items-center justify-center hover:scale-110 transition-transform duration-300">
               <div className="w-full h-full rounded-[15px] sm:rounded-[20px] bg-white flex items-center justify-center shadow-inner overflow-hidden p-1.5 sm:p-2.5">
                 <img
                   src="/images/upwork-icon.png"
                   alt="Upwork"
+                  width="48"
+                  height="48"
+                  decoding="async"
                   className="w-full h-full object-contain select-none"
                   draggable={false}
                 />
@@ -220,12 +223,15 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
           {/* ======================================================= */}
           {/* 3D LINKEDIN BLUE SQUIRCLE (FIXED BOTTOM-RIGHT OF CARD)  */}
           {/* ======================================================= */}
-          <div className="absolute -bottom-5 -right-2 sm:-bottom-8 sm:-right-5 z-30 w-13 h-13 sm:w-17 sm:h-17 animate-float-reverse">
+          <div className="absolute -bottom-5 -right-2 sm:-bottom-8 sm:-right-5 z-30 w-13 h-13 sm:w-17 sm:h-17 md:animate-float-reverse">
             <div className="relative w-full h-full rounded-[18px] sm:rounded-[24px] bg-gradient-to-br from-[#0A66C2] via-[#004182] to-[#002952] p-[2px] sm:p-[2.5px] shadow-[0_16px_36px_rgba(10,102,194,0.55),0_0_0_1px_rgba(255,255,255,0.45)_inset] rotate-12 flex items-center justify-center hover:scale-110 transition-transform duration-300">
               <div className="w-full h-full rounded-[15px] sm:rounded-[20px] bg-white flex items-center justify-center shadow-inner overflow-hidden p-1.5 sm:p-2">
                 <img
                   src="/images/linkedin-icon.png"
                   alt="LinkedIn"
+                  width="48"
+                  height="48"
+                  decoding="async"
                   className="w-full h-full object-contain select-none rounded-[10px]"
                   draggable={false}
                 />

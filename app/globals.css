@@ -173,17 +173,14 @@ body {
 
 .animate-float-subtle {
   animation: floatSubtle 5s ease-in-out infinite;
-  will-change: transform;
 }
 
 .animate-float-slow {
   animation: floatSlow 18s ease-in-out infinite;
-  will-change: transform;
 }
 
 .animate-float-reverse {
   animation: floatReverse 22s ease-in-out infinite;
-  will-change: transform;
 }
 
 .animate-radar {
@@ -215,10 +212,9 @@ body {
 
 /* Smooth Card Hover Lift & Glow */
 .card-hover-lift {
-  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1),
-              border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
+  transition: transform 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              box-shadow 0.25s cubic-bezier(0.16, 1, 0.3, 1),
+              border-color 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .card-hover-lift:hover {
@@ -231,8 +227,7 @@ body {
 .btn-shine-effect {
   position: relative;
   overflow: hidden;
-  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-  will-change: transform, box-shadow;
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
 }
 
 .btn-shine-effect::after {
@@ -263,4 +258,37 @@ body {
 
 .btn-shine-effect:active {
   transform: scale(0.97);
+}
+
+/* ============================================================ */
+/* MOBILE PERFORMANCE OPTIMIZATIONS (HIGH FPS & SMOOTH SCROLL)  */
+/* ============================================================ */
+
+/* Off-screen rendering optimization for mobile */
+#purpose-built,
+#comparison,
+#conversion-framework,
+#testimonials,
+#faq,
+footer {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 500px;
+}
+
+@media (max-width: 768px) {
+  /* Disable heavy infinite GPU transforms on small screens */
+  .animate-float-slow,
+  .animate-float-reverse,
+  .animate-float-subtle {
+    animation: none !important;
+    transform: none !important;
+  }
+
+  /* Simplify backdrop blurs for 60fps mobile scrolling */
+  .backdrop-blur-xl,
+  .backdrop-blur-2xl,
+  .backdrop-blur-3xl {
+    backdrop-filter: blur(8px) !important;
+    -webkit-backdrop-filter: blur(8px) !important;
+  }
 }
