@@ -18,6 +18,7 @@
 .env
 .env.production
 .env.development
+!.env.example
 
 # Debug
 npm-debug.log*

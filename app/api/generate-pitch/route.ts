@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
-import { FreelancerProfile, ProjectItem, Channel, Tone } from '@/types';
+import { generatePitchSchema } from '@/lib/validate';
+import { checkRateLimit } from '@/lib/ratelimit';
 
 function sanitizeUpworkText(text: string): string {
   if (!text) return '';
@@ -12,61 +13,64 @@ function sanitizeUpworkText(text: string): string {
 
 export async function POST(req: NextRequest) {
   try {
-    const body = await req.json();
-    const {
-      jobText,
-      profile,
-      selectedProjects,
-      channel,
-      tone,
-      apiKey,
-    }: {
-      jobText: string;
-      profile: FreelancerProfile;
-      selectedProjects: ProjectItem[];
-      channel: Channel;
-      tone: Tone;
-      apiKey?: string;
-    } = body;
+    let body: unknown;
+    try {
+      body = await req.json();
+    } catch {
+      return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    }
 
-    const jobDescription = jobText?.trim();
-    if (!jobDescription) {
+    // 1. Strict Payload Validation with Zod
+    const validation = generatePitchSchema.safeParse(body);
+    if (!validation.success) {
+      return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
+    }
+
+    const { jobText, profile, selectedProjects, channel, tone, apiKey } = validation.data;
+
+    // 2. IP-based Sliding Window Rate Limiting
+    const xForwardedFor = req.headers.get('x-forwarded-for');
+    const clientIp = xForwardedFor ? xForwardedFor.split(',')[0].trim() : 'unknown';
+    const hasCustomKey = Boolean(apiKey?.trim());
+
+    const rateLimit = await checkRateLimit(clientIp, hasCustomKey);
+    if (!rateLimit.success) {
+      const retryAfterSeconds = Math.max(1, Math.ceil((rateLimit.reset - Date.now()) / 1000));
       return NextResponse.json(
-        { error: 'Please provide a job posting description.' },
-        { status: 400 }
+        { error: 'Too many requests. Please try again later.' },
+        {
+          status: 429,
+          headers: {
+            'Retry-After': String(retryAfterSeconds),
+          },
+        }
       );
     }
 
-    // Securely retrieve Gemini API key from environment or user settings
-    const geminiKey =
-      process.env.GEMINI_API_KEY?.trim() ||
-      apiKey?.trim();
-
+    // 3. Retrieve and Validate Gemini Key
+    const geminiKey = apiKey?.trim() || process.env.GEMINI_API_KEY?.trim();
     if (!geminiKey) {
       return NextResponse.json(
-        {
-          error:
-            'No Gemini API Key found. Please configure GEMINI_API_KEY in .env.local or enter your key in API Settings.',
-        },
+        { error: 'No valid Gemini API key configured.' },
         { status: 401 }
       );
     }
 
-    const freelancerName = profile?.name?.trim();
-    if (!freelancerName) {
-      return NextResponse.json(
-        { error: 'Please add your name in the profile section.' },
-        { status: 400 }
-      );
-    }
-    const freelancerRole = profile?.role?.trim() || '';
-    const userBio = profile?.bio?.trim() || '';
-    const platform = channel || 'upwork';
-    const chosenTone = tone || 'direct';
+    const freelancerName = profile.name.trim();
+    const freelancerRole = profile.role?.trim() || '';
+    const userBio = profile.bio?.trim() || '';
+    const platform = channel;
+    const chosenTone = tone;
 
-    const projectsContext = selectedProjects && selectedProjects.length > 0
-      ? selectedProjects.map((p, i) => `Project ${i+1}: ${p.title} | Metric/Link: ${p.metricOrLink} | Tech Tags: ${p.tags.join(', ')}`).join('\n')
-      : 'No specific project selected. Use general expertise matching the role.';
+    const projectsContext =
+      selectedProjects.length > 0
+        ? selectedProjects
+            .map(
+              (p, i) =>
+                `Project ${i + 1}: ${p.title} | Metric/Link: ${p.metricOrLink} | Tech Tags: ${p.tags.join(', ')}`
+            )
+            .join('\n')
+        : 'No specific project selected. Use general expertise matching the role.';
 
     const promptText = `You are an elite freelance proposal specialist for UpPitch.
 Analyze the real job posting below and generate two distinct, high-converting, professional proposals following these STRICT REFINEMENT RULES:
@@ -74,7 +78,7 @@ Analyze the real job posting below and generate two distinct, high-converting, p
 ==============================
 REAL JOB DESCRIPTION:
 """
-${jobDescription}
+${jobText}
 """
 ==============================
 FREELANCER PROFILE CONTEXT:
@@ -126,25 +130,23 @@ Return ONLY a valid JSON object matching this schema:
   "detectedProblems": ["Core Problem 1 identified from brief", "Core Problem 2", "Core Problem 3"]
 }`;
 
-    const candidateModels = [
-      process.env.GEMINI_MODEL,
-      'gemini-3.5-flash-lite',
-      'gemini-3.1-flash-lite',
-      'gemini-3.5-flash',
-      'gemini-3.8-flash',
-    ].filter(Boolean) as string[];
+    // 4. Model Selection (Primary & Fallback, Max 2 models)
+    const primaryModel = process.env.GEMINI_MODEL?.trim() || 'gemini-3.5-flash-lite';
+    const fallbackModel = process.env.GEMINI_FALLBACK_MODEL?.trim() || 'gemini-3.1-flash-lite';
+    const candidateModels = Array.from(new Set([primaryModel, fallbackModel])).slice(0, 2);
 
     let parsedResult = null;
-    let lastError = '';
+    let lastErrorCategory: '401' | '429' | '502' | '500' = '500';
 
     for (const model of candidateModels) {
       try {
-        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${geminiKey}`;
+        const geminiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`;
 
         const response = await fetch(geminiUrl, {
           method: 'POST',
           headers: {
             'Content-Type': 'application/json',
+            'x-goog-api-key': geminiKey,
           },
           body: JSON.stringify({
             contents: [
@@ -160,6 +162,7 @@ Return ONLY a valid JSON object matching this schema:
               responseMimeType: 'application/json',
             },
           }),
+          signal: AbortSignal.timeout(25000),
         });
 
         if (response.ok) {
@@ -173,40 +176,73 @@ Return ONLY a valid JSON object matching this schema:
               parsedResult = {
                 variationA: rawText,
                 variationB: rawText,
-                subjectLine: `quick observation regarding ${jobDescription.slice(0, 30)}`,
+                subjectLine: `Quick observation regarding ${jobText.slice(0, 30)}`,
                 detectedProblems: ['Requirements Analysis'],
               };
               break;
             }
           }
         } else {
-          const errData = await response.json().catch(() => ({}));
-          lastError = errData?.error?.message || `Status ${response.status}: ${response.statusText}`;
+          console.error(`Gemini API Error: Status ${response.status}`);
+          // Do not retry on client auth errors (400, 401, 403)
+          if (response.status === 400 || response.status === 401 || response.status === 403) {
+            return NextResponse.json(
+              { error: 'No valid Gemini API key configured.' },
+              { status: 401 }
+            );
+          }
+          if (response.status === 429) {
+            lastErrorCategory = '429';
+          } else if (response.status >= 500) {
+            lastErrorCategory = '502';
+          } else {
+            lastErrorCategory = '500';
+          }
         }
       } catch (err: any) {
-        lastError = err?.message || 'Network error connecting to Gemini API';
+        console.error(`Gemini Fetch Error: ${err?.name || 'Error'}`);
+        if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+          lastErrorCategory = '502';
+        } else {
+          lastErrorCategory = '500';
+        }
       }
     }
 
     if (!parsedResult) {
+      if (lastErrorCategory === '429') {
+        return NextResponse.json(
+          { error: 'AI service is busy. Try again shortly.' },
+          { status: 429 }
+        );
+      }
+      if (lastErrorCategory === '502') {
+        return NextResponse.json(
+          { error: 'AI service error. Please try again.' },
+          { status: 502 }
+        );
+      }
       return NextResponse.json(
-        { error: lastError || 'No response received from Gemini AI. Please check your API key or connection.' },
+        { error: 'Something went wrong.' },
         { status: 500 }
       );
     }
 
     // Clean up any stray markdown symbols for a 100% clean copy-paste into Upwork
     const sanitizedOutput = {
-      ...parsedResult,
-      variationA: sanitizeUpworkText(parsedResult.variationA),
-      variationB: sanitizeUpworkText(parsedResult.variationB),
+      variationA: sanitizeUpworkText(parsedResult.variationA || ''),
+      variationB: sanitizeUpworkText(parsedResult.variationB || ''),
+      subjectLine: parsedResult.subjectLine || undefined,
+      detectedProblems: Array.isArray(parsedResult.detectedProblems)
+        ? parsedResult.detectedProblems
+        : [],
     };
 
     return NextResponse.json(sanitizedOutput);
   } catch (err: any) {
-    console.error('Error generating pitch:', err);
+    console.error(`Unhandled API Route Error: ${err?.name || 'Error'}`);
     return NextResponse.json(
-      { error: err.message || 'Internal server error while generating pitch.' },
+      { error: 'Something went wrong.' },
       { status: 500 }
     );
   }

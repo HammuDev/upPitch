@@ -20,6 +20,17 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
 }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
 
+  React.useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleCopy = (item: HistoryItem) => {
@@ -36,13 +47,18 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
       />
 
       <div className="fixed inset-y-0 right-0 max-w-full flex pl-6 sm:pl-10">
-        <div className="w-screen max-w-md bg-white border-l border-indigo-100 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300">
+        <div
+          role="dialog"
+          aria-modal="true"
+          aria-labelledby="history-drawer-title"
+          className="w-screen max-w-md bg-white border-l border-indigo-100 shadow-2xl flex flex-col animate-in slide-in-from-right duration-300"
+        >
           
           {/* Header */}
           <div className="flex items-center justify-between px-5 sm:px-6 py-4 border-b border-slate-100">
             <div className="flex items-center gap-2">
               <Clock className="h-4 w-4 text-indigo-600" />
-              <h3 className="text-sm font-bold text-slate-900">Proposal History</h3>
+              <h3 id="history-drawer-title" className="text-sm font-bold text-slate-900">Proposal History</h3>
               <span className="rounded-full bg-indigo-100 px-2 py-0.2 text-[10px] font-bold text-indigo-700 font-mono">
                 {history.length}
               </span>

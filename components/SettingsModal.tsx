@@ -17,6 +17,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
     }
   }, [isOpen]);
 
+  useEffect(() => {
+    if (!isOpen) return;
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if (e.key === 'Escape') {
+        onClose();
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, [isOpen, onClose]);
+
   if (!isOpen) return null;
 
   const handleSave = () => {
@@ -32,12 +43,17 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-slate-900/40 backdrop-blur-sm p-3.5 sm:p-4 animate-in fade-in duration-200">
-      <div className="w-full max-w-md rounded-2xl border border-indigo-100 bg-white p-5 sm:p-6 shadow-2xl shadow-indigo-500/10 space-y-4 max-h-[95vh] overflow-y-auto animate-modal-scale">
+      <div
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="settings-modal-title"
+        className="w-full max-w-md rounded-2xl border border-indigo-100 bg-white p-5 sm:p-6 shadow-2xl shadow-indigo-500/10 space-y-4 max-h-[95vh] overflow-y-auto animate-modal-scale"
+      >
         
         <div className="flex items-center justify-between pb-3 border-b border-slate-100">
           <div className="flex items-center gap-2">
             <SlidersHorizontal className="h-4 w-4 text-indigo-600" />
-            <h3 className="text-sm font-bold text-slate-900">Google Gemini API Settings</h3>
+            <h3 id="settings-modal-title" className="text-sm font-bold text-slate-900">Google Gemini API Settings</h3>
           </div>
           <button
             type="button"
