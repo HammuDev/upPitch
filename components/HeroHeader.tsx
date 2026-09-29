@@ -10,7 +10,7 @@ interface HeroHeaderProps {
 }
 
 export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
-  savedPitchesCount,
+  savedPitchesCount: _savedPitchesCount,
   onLoadSampleBrief,
   onScrollToWorkspace,
 }) => {

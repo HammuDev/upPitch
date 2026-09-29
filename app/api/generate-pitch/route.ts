@@ -69,7 +69,7 @@ export async function POST(req: NextRequest) {
       });
 
       return NextResponse.json(result);
-    } catch (pipelineErr: any) {
+    } catch (pipelineErr: unknown) {
       if (pipelineErr instanceof GeminiAuthError) {
         return NextResponse.json(
           { error: 'No valid Gemini API key configured.' },
@@ -89,14 +89,16 @@ export async function POST(req: NextRequest) {
         );
       }
 
-      console.error(`Pipeline Execution Error: ${pipelineErr?.name || 'Error'}`);
+      const errName = pipelineErr instanceof Error ? pipelineErr.name : 'Error';
+      console.error(`Pipeline Execution Error: ${errName}`);
       return NextResponse.json(
         { error: 'Something went wrong.' },
         { status: 500 }
       );
     }
-  } catch (err: any) {
-    console.error(`Unhandled API Route Error: ${err?.name || 'Error'}`);
+  } catch (err: unknown) {
+    const errName = err instanceof Error ? err.name : 'Error';
+    console.error(`Unhandled API Route Error: ${errName}`);
     return NextResponse.json(
       { error: 'Something went wrong.' },
       { status: 500 }

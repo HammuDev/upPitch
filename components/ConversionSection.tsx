@@ -9,7 +9,6 @@ import {
   Cpu,
   ShieldCheck,
   Tag,
-  Sparkle,
 } from 'lucide-react';
 
 export const ConversionSection: React.FC = memo(() => {

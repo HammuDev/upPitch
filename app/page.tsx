@@ -84,9 +84,10 @@ export default function Home() {
       };
 
       addHistoryItem(newHistoryItem);
-    } catch (err: any) {
+    } catch (err: unknown) {
       console.error('Generation failed:', err);
-      setErrorMessage(err.message || 'Failed to generate proposal via Gemini AI.');
+      const msg = err instanceof Error ? err.message : 'Failed to generate proposal via Gemini AI.';
+      setErrorMessage(msg);
       setGeneratedPitches(null);
     } finally {
       setIsGenerating(false);

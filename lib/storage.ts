@@ -13,6 +13,30 @@ export const DEFAULT_PROFILE: FreelancerProfile = {
 const PROFILE_KEY = 'uppitch_profile_v1';
 const HISTORY_KEY = 'uppitch_history_v1';
 
+/**
+ * Migrates legacy history items (which only had pitchText) so both
+ * Variation A and Variation B tabs display the proposal, while preserving
+ * distinct pitchText and pitchTextB in modern dual-variation items.
+ */
+export function migrateHistoryItem(
+  item: Partial<HistoryItem> & { pitchText?: string; pitchTextB?: string }
+): HistoryItem {
+  const pitchA = item.pitchText || '';
+  const pitchB = item.pitchTextB !== undefined ? item.pitchTextB : pitchA;
+
+  return {
+    id: item.id || `hist-${Date.now()}`,
+    timestamp: item.timestamp || new Date().toISOString(),
+    channel: item.channel || 'upwork',
+    tone: item.tone || 'direct',
+    variationName: item.variationName || 'Variation A (Direct)',
+    pitchText: pitchA,
+    pitchTextB: pitchB,
+    jobSnippet: item.jobSnippet || '',
+    subjectLine: item.subjectLine,
+  };
+}
+
 export function getStoredProfile(): FreelancerProfile {
   if (typeof window === 'undefined') return DEFAULT_PROFILE;
   try {
@@ -48,7 +72,7 @@ export function getStoredHistory(): HistoryItem[] {
     const parsed = JSON.parse(raw);
     const result = storedHistorySchema.safeParse(parsed);
     if (result.success) {
-      return result.data as HistoryItem[];
+      return (result.data as HistoryItem[]).map((item) => migrateHistoryItem(item));
     }
     console.warn('Invalid history structure in localStorage, falling back to empty list');
     return [];

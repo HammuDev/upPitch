@@ -1,6 +1,6 @@
 'use client';
 import React, { memo } from 'react';
-import { SlidersHorizontal, Clock, Sparkles } from 'lucide-react';
+import { SlidersHorizontal, Clock } from 'lucide-react';
 import { Logo } from './Logo';
 
 interface HeaderProps {

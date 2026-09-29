@@ -1,7 +1,7 @@
 'use client';
 import React, { useState, memo } from 'react';
 import Image from 'next/image';
-import { ChevronRight, HelpCircle, Sparkles } from 'lucide-react';
+import { ChevronRight, HelpCircle } from 'lucide-react';
 
 interface FaqItem {
   question: string;

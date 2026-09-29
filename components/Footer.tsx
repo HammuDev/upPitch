@@ -3,7 +3,7 @@ import React, { useState, memo } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import { Logo } from './Logo';
-import { ShieldCheck, ArrowUp, Send, Check, Mail, ChevronRight, Link2 } from 'lucide-react';
+import { ShieldCheck, ArrowUp, Send, Check, Mail, ChevronRight } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
 
 export const Footer: React.FC = memo(() => {

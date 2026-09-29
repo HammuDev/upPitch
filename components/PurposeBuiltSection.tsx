@@ -4,7 +4,6 @@ import {
   Sparkles,
   CheckCircle2,
   ArrowRight,
-  TrendingUp,
   Copy,
   Check,
   Zap,
@@ -116,7 +115,7 @@ export const PurposeBuiltSection: React.FC<PurposeBuiltSectionProps> = memo(({
                   <button
                     key={tab.id}
                     type="button"
-                    onClick={() => setActiveTab(tab.id as any)}
+                    onClick={() => setActiveTab(tab.id as 'analysis' | 'proposal' | 'cover-letter')}
                     className={`cursor-pointer rounded-lg px-3.5 py-1.5 text-xs font-semibold transition-all duration-150 ${
                       activeTab === tab.id
                         ? 'bg-indigo-50 border border-indigo-300 text-indigo-700 shadow-2xs font-bold'

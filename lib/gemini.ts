@@ -22,7 +22,7 @@ export class GeminiServiceError extends Error {
 /**
  * Safely parses JSON string, stripping markdown code fences if present.
  */
-export function safeParseJson<T = any>(rawText: string): T {
+export function safeParseJson<T = unknown>(rawText: string): T {
   if (!rawText) {
     throw new Error('Empty JSON response');
   }
@@ -37,7 +37,7 @@ export function safeParseJson<T = any>(rawText: string): T {
  * Executes a Gemini API call with x-goog-api-key header, 25s timeout,
  * JSON mode, model fallbacks, and safe JSON parsing with single retry.
  */
-export async function callGemini<T = any>({
+export async function callGemini<T = unknown>({
   apiKey,
   prompt,
   temperature = 0.7,
@@ -93,7 +93,7 @@ export async function callGemini<T = any>({
           try {
             const parsed = safeParseJson<T>(rawText);
             return parsed;
-          } catch (parseError) {
+          } catch {
             console.error(`Gemini JSON Parse Error: Attempt ${attempt + 1}`);
             if (attempt === 0) {
               continue; // Retry once
@@ -117,15 +117,16 @@ export async function callGemini<T = any>({
             break;
           }
         }
-      } catch (err: any) {
+      } catch (err: unknown) {
         if (err instanceof GeminiAuthError) {
           throw err;
         }
         if (err instanceof GeminiServiceError) {
           throw err;
         }
-        console.error(`Gemini Fetch Error: ${err?.name || 'Error'}`);
-        if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+        const errName = err instanceof Error ? err.name : 'Error';
+        console.error(`Gemini Fetch Error: ${errName}`);
+        if (errName === 'TimeoutError' || errName === 'AbortError') {
           lastCategory = '502';
         }
         break; // Move to next model

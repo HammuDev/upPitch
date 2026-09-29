@@ -147,7 +147,7 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
               <button
                 key={t.id}
                 type="button"
-                onClick={() => setActiveTab(t.id as any)}
+                onClick={() => setActiveTab(t.id as 'var-a' | 'var-b' | 'portfolio')}
                 className={`cursor-pointer rounded-lg py-1.5 sm:py-2 px-1 sm:px-2.5 text-center text-xs font-semibold transition-all duration-200 ${
                   activeTab === t.id
                     ? 'bg-indigo-600 text-white shadow-xs scale-[1.01]'
