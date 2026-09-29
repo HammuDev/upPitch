@@ -147,13 +147,17 @@ export default function Home() {
 
       setGeneratedPitches(res);
 
+      const now = new Date();
       const newHistoryItem: HistoryItem = {
         id: 'hist-' + Date.now(),
-        timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+        createdAt: now.toISOString(),
         channel,
         tone,
         variationName: 'Variation A (Direct)',
         pitchText: res['var-a'],
+        pitchTextB: res['var-b'],
+        subjectLine: res.subjectLine,
         jobSnippet: jobText.substring(0, 120),
       };
 
@@ -198,7 +202,8 @@ export default function Home() {
     setJobText(item.jobSnippet || '');
     setGeneratedPitches({
       'var-a': item.pitchText,
-      'var-b': item.pitchText,
+      'var-b': item.pitchTextB || item.pitchText,
+      subjectLine: item.subjectLine,
       detectedProblems: ['Loaded from archive'],
     });
     setErrorMessage(null);

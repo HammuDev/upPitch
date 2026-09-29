@@ -24,6 +24,9 @@ export interface GeneratedPitches {
   subjectLine?: string;
   detectedProblems?: string[];
   matchedProject?: ProjectItem;
+  matchedProjects?: ProjectItem[];
+  warnings?: string[];
+  gaps?: string[];
 }
 
 export interface HistoryItem {
@@ -34,4 +37,7 @@ export interface HistoryItem {
   variationName: string;
   pitchText: string;
   jobSnippet: string;
+  pitchTextB?: string;
+  subjectLine?: string;
+  createdAt?: string;
 }

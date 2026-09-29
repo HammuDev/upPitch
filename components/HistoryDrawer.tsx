@@ -103,7 +103,11 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
                     <span className="rounded bg-indigo-100 border border-indigo-200 px-2 py-0.5 text-indigo-700 uppercase font-bold">
                       {item.channel}
                     </span>
-                    <span className="text-slate-400">{item.timestamp}</span>
+                    <span className="text-slate-400">
+                      {item.createdAt
+                        ? `${new Date(item.createdAt).toLocaleDateString([], { month: 'short', day: 'numeric' })} • ${item.timestamp}`
+                        : item.timestamp}
+                    </span>
                   </div>
 
                   <p className="text-xs text-slate-800 line-clamp-4 leading-relaxed whitespace-pre-line">

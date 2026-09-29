@@ -166,6 +166,12 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
   const wordCount = currentPitchText ? currentPitchText.trim().split(/\s+/).filter(Boolean).length : 0;
   const charCount = jobText.length;
   const selectedCount = profile.projects.filter((p) => selectedProjectIds.includes(p.id)).length;
+  const displayedProofProjects = generatedPitches
+    ? (generatedPitches.matchedProjects || (generatedPitches.matchedProject ? [generatedPitches.matchedProject] : []))
+    : profile.projects.filter((p) => selectedProjectIds.includes(p.id));
+  const proofCount = generatedPitches
+    ? (generatedPitches.matchedProjects?.length ?? (generatedPitches.matchedProject ? 1 : 0))
+    : selectedCount;
 
   return (
     <div id="workspace" className="mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 py-3 sm:py-4 scroll-mt-20">
@@ -526,7 +532,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                 {[
                   { id: 'var-a', short: 'Variation A', full: 'Variation A (Problem-First Fix)' },
                   { id: 'var-b', short: 'Variation B', full: 'Variation B (Consultative Loom)' },
-                  { id: 'portfolio', short: `Proof (${selectedCount})`, full: `Matched Proof (${selectedCount})` },
+                  { id: 'portfolio', short: `Proof (${proofCount})`, full: `Matched Proof (${proofCount})` },
                 ].map((t) => (
                   <button
                     key={t.id}
@@ -725,14 +731,22 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                       </p>
                     </div>
                     <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2.5 py-0.5 text-xs text-emerald-700 font-mono font-bold">
-                      {selectedCount > 0 ? `${selectedCount} Project(s) Selected` : 'Profile Overview'}
+                      {displayedProofProjects.length > 0 ? `${displayedProofProjects.length} Project(s) Matched` : 'No Matched Projects'}
                     </span>
                   </div>
 
                   <div className="space-y-3">
-                    {profile.projects
-                      .filter((p) => selectedProjectIds.includes(p.id))
-                      .map((p) => (
+                    {displayedProofProjects.length === 0 ? (
+                      <div className="text-center py-10 space-y-1.5 text-slate-500">
+                        <p className="text-xs font-semibold text-slate-700">No matching project proof was used.</p>
+                        <p className="text-[11px] text-slate-400">
+                          {profile.projects.length === 0
+                            ? 'Add projects in your profile with tags matching the client tech stack to cite verified proof.'
+                            : 'None of your selected project tags overlapped with the client requirements.'}
+                        </p>
+                      </div>
+                    ) : (
+                      displayedProofProjects.map((p) => (
                         <div
                           key={p.id}
                           className="rounded-xl border border-indigo-100 bg-slate-50/70 p-3.5 sm:p-4 space-y-2 card-hover-lift"
@@ -753,7 +767,8 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                             ))}
                           </div>
                         </div>
-                      ))}
+                      ))
+                    )}
                   </div>
                 </div>
               ) : (
@@ -848,6 +863,44 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                     }}
                     className="cursor-text w-full bg-slate-50/80 border border-slate-200 rounded-xl p-3.5 sm:p-4 text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:bg-white focus:outline-none focus:border-indigo-500 resize-y font-normal"
                   />
+
+                  {/* Subtle Notice if No Project Proof Matched */}
+                  {generatedPitches && (!generatedPitches.matchedProjects || generatedPitches.matchedProjects.length === 0) && !generatedPitches.matchedProject && (
+                    <div className="text-[11px] font-mono text-slate-500 flex items-center gap-1.5 pt-0.5">
+                      <span className="h-1.5 w-1.5 rounded-full bg-slate-400" />
+                      <span>No matching project proof was used.</span>
+                    </div>
+                  )}
+
+                  {/* Warnings as small amber chips */}
+                  {generatedPitches?.warnings && generatedPitches.warnings.length > 0 && (
+                    <div className="flex flex-wrap gap-1.5 pt-1">
+                      {generatedPitches.warnings.map((w, idx) => (
+                        <span
+                          key={idx}
+                          className="inline-flex items-center gap-1 rounded-md bg-amber-50 border border-amber-200 px-2 py-0.5 text-[11px] font-medium text-amber-800"
+                        >
+                          <AlertCircle className="h-3 w-3 shrink-0 text-amber-600" />
+                          <span>{w}</span>
+                        </span>
+                      ))}
+                    </div>
+                  )}
+
+                  {/* Gaps List */}
+                  {generatedPitches?.gaps && generatedPitches.gaps.length > 0 && (
+                    <div className="rounded-lg border border-slate-200 bg-slate-50 p-2.5 space-y-1 text-xs text-slate-700">
+                      <div className="flex items-center gap-1.5 font-semibold text-slate-800 text-[11px]">
+                        <AlertCircle className="h-3 w-3 text-slate-500 shrink-0" />
+                        <span>Not proven in your profile:</span>
+                      </div>
+                      <ul className="list-disc list-inside space-y-0.5 text-[11px] text-slate-600 pl-1">
+                        {generatedPitches.gaps.map((gap, idx) => (
+                          <li key={idx}>{gap}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
                 </div>
               )}
             </div>
