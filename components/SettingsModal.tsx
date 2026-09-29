@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { useState, useEffect } from 'react';
 import { X, SlidersHorizontal, Check, Key } from 'lucide-react';
 

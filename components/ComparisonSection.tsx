@@ -1,4 +1,3 @@
-'use strict';
 import React, { memo } from 'react';
 import { XCircle, AlertTriangle, CheckCircle2, Sparkles, Clock, Zap, ShieldAlert, Trophy } from 'lucide-react';
 

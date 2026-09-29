@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { memo } from 'react';
 import { MessageSquare, Heart, ArrowRight } from 'lucide-react';
 import { siteConfig } from '@/lib/site';

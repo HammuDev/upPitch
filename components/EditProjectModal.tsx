@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { useState, useEffect } from 'react';
 import { X, Pencil } from 'lucide-react';
 import { ProjectItem } from '@/types';

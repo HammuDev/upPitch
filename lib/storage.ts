@@ -1,4 +1,5 @@
 import { FreelancerProfile, HistoryItem } from '@/types';
+import { storedProfileSchema, storedHistorySchema } from '@/lib/validate';
 
 export const DEFAULT_PROFILE: FreelancerProfile = {
   name: '',
@@ -17,7 +18,13 @@ export function getStoredProfile(): FreelancerProfile {
   try {
     const raw = localStorage.getItem(PROFILE_KEY);
     if (!raw) return DEFAULT_PROFILE;
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    const result = storedProfileSchema.safeParse(parsed);
+    if (result.success) {
+      return result.data;
+    }
+    console.warn('Invalid profile structure in localStorage, falling back to default');
+    return DEFAULT_PROFILE;
   } catch (e) {
     console.error('Failed to load profile:', e);
     return DEFAULT_PROFILE;
@@ -38,7 +45,13 @@ export function getStoredHistory(): HistoryItem[] {
   try {
     const raw = localStorage.getItem(HISTORY_KEY);
     if (!raw) return [];
-    return JSON.parse(raw);
+    const parsed = JSON.parse(raw);
+    const result = storedHistorySchema.safeParse(parsed);
+    if (result.success) {
+      return result.data as HistoryItem[];
+    }
+    console.warn('Invalid history structure in localStorage, falling back to empty list');
+    return [];
   } catch {
     return [];
   }

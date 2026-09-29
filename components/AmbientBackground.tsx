@@ -1,4 +1,3 @@
-'use strict';
 import React, { memo } from 'react';
 
 export const AmbientBackground: React.FC = memo(() => {

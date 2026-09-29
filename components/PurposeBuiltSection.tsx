@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { useState, memo } from 'react';
 import {
   Sparkles,

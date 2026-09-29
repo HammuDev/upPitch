@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { useState, memo } from 'react';
 import { Zap, ArrowRight, Copy, Check } from 'lucide-react';
 import { HistoryItem } from '@/types';

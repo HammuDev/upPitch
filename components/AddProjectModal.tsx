@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { useState } from 'react';
 import { X, FolderPlus } from 'lucide-react';
 import { ProjectItem } from '@/types';

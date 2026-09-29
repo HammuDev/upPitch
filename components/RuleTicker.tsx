@@ -1,4 +1,4 @@
-'use strict';
+'use client';
 import React, { useState, useEffect, memo } from 'react';
 
 const RULES = [

@@ -1,4 +1,3 @@
-'use strict';
 import React, { memo } from 'react';
 import {
   Sparkles,

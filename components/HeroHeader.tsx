@@ -1,5 +1,6 @@
-'use strict';
+'use client';
 import React, { memo, useState } from 'react';
+import Image from 'next/image';
 import { Sparkles, ArrowRight, Play, CheckCircle2, Copy, Check } from 'lucide-react';
 
 interface HeroHeaderProps {
@@ -190,12 +191,11 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
           <div className="absolute -top-5 -left-2 sm:-top-8 sm:-left-5 z-30 w-13 h-13 sm:w-18 sm:h-18 md:animate-float-subtle">
             <div className="relative w-full h-full rounded-[18px] sm:rounded-[24px] bg-gradient-to-br from-[#22c55e] via-[#16a34a] to-[#15803d] p-[2px] sm:p-[2.5px] shadow-[0_16px_36px_rgba(22,163,74,0.55),0_0_0_1px_rgba(255,255,255,0.45)_inset] -rotate-12 flex items-center justify-center hover:scale-110 transition-transform duration-300">
               <div className="w-full h-full rounded-[15px] sm:rounded-[20px] bg-white flex items-center justify-center shadow-inner overflow-hidden p-1.5 sm:p-2.5">
-                <img
+                <Image
                   src="/images/upwork-icon.png"
                   alt="Upwork"
-                  width="48"
-                  height="48"
-                  decoding="async"
+                  width={48}
+                  height={48}
                   className="w-full h-full object-contain select-none"
                   draggable={false}
                 />
@@ -209,12 +209,11 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
           <div className="absolute -bottom-5 -right-2 sm:-bottom-8 sm:-right-5 z-30 w-13 h-13 sm:w-17 sm:h-17 md:animate-float-reverse">
             <div className="relative w-full h-full rounded-[18px] sm:rounded-[24px] bg-gradient-to-br from-[#0A66C2] via-[#004182] to-[#002952] p-[2px] sm:p-[2.5px] shadow-[0_16px_36px_rgba(10,102,194,0.55),0_0_0_1px_rgba(255,255,255,0.45)_inset] rotate-12 flex items-center justify-center hover:scale-110 transition-transform duration-300">
               <div className="w-full h-full rounded-[15px] sm:rounded-[20px] bg-white flex items-center justify-center shadow-inner overflow-hidden p-1.5 sm:p-2">
-                <img
+                <Image
                   src="/images/linkedin-icon.png"
                   alt="LinkedIn"
-                  width="48"
-                  height="48"
-                  decoding="async"
+                  width={48}
+                  height={48}
                   className="w-full h-full object-contain select-none rounded-[10px]"
                   draggable={false}
                 />

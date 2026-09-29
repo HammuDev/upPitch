@@ -1,5 +1,6 @@
-'use strict';
+'use client';
 import React, { useState, memo } from 'react';
+import Image from 'next/image';
 import { Logo } from './Logo';
 import { ShieldCheck, ArrowUp, Send, Check, Mail, ChevronRight, Link2 } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
@@ -160,9 +161,11 @@ export const Footer: React.FC = memo(() => {
                   aria-label="LinkedIn"
                   title="LinkedIn"
                 >
-                  <img
+                  <Image
                     src="/images/linkedin-icon.png"
                     alt="LinkedIn"
+                    width={24}
+                    height={24}
                     className="h-full w-full object-contain rounded-xs group-hover:drop-shadow-[0_0_6px_rgba(10,102,194,0.5)]"
                   />
                 </a>
@@ -194,9 +197,11 @@ export const Footer: React.FC = memo(() => {
                   aria-label="Upwork"
                   title="Upwork"
                 >
-                  <img
+                  <Image
                     src="/images/upwork-icon.png"
                     alt="Upwork"
+                    width={24}
+                    height={24}
                     className="h-full w-full object-contain group-hover:drop-shadow-[0_0_6px_rgba(22,163,74,0.5)]"
                   />
                 </a>

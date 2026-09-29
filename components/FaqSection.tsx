@@ -1,5 +1,6 @@
-'use strict';
+'use client';
 import React, { useState, memo } from 'react';
+import Image from 'next/image';
 import { ChevronRight, HelpCircle, Sparkles } from 'lucide-react';
 
 interface FaqItem {
@@ -106,7 +107,7 @@ export const FaqSection: React.FC = memo(() => {
             {/* Floating Upwork Squircle Badge */}
             <div className="absolute -top-3 -left-2 z-20 w-14 h-14 rounded-2xl bg-gradient-to-br from-emerald-400 via-emerald-500 to-teal-600 p-[2px] shadow-lg shadow-emerald-500/30 -rotate-12 animate-float-slow">
               <div className="w-full h-full rounded-2xl bg-white flex items-center justify-center p-2">
-                <img src="/images/upwork-icon.png" alt="Upwork" className="w-full h-full object-contain" />
+                <Image src="/images/upwork-icon.png" alt="Upwork" width={48} height={48} className="w-full h-full object-contain" />
               </div>
             </div>
 
