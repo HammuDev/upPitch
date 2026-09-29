@@ -1,6 +1,7 @@
 'use client';
 import React, { useState, memo } from 'react';
 import Image from 'next/image';
+import Link from 'next/link';
 import { Logo } from './Logo';
 import { ShieldCheck, ArrowUp, Send, Check, Mail, ChevronRight, Link2 } from 'lucide-react';
 import { siteConfig } from '@/lib/site';
@@ -330,35 +331,34 @@ export const Footer: React.FC = memo(() => {
                 </a>
               </li>
               <li>
-                <a
-                  href="#faq"
-                  onClick={(e) => { e.preventDefault(); scrollTo('faq'); }}
+                <Link
+                  href="/terms"
                   className="hover:text-indigo-600 hover:translate-x-1 transition-all flex items-center justify-between w-full group"
                 >
                   <span className="group-hover:font-medium">Terms of Service</span>
                   <ChevronRight className="h-3.5 w-3.5 text-indigo-400 group-hover:text-indigo-600 transition-colors shrink-0" />
-                </a>
+                </Link>
               </li>
               <li>
-                <a
-                  href="#faq"
-                  onClick={(e) => { e.preventDefault(); scrollTo('faq'); }}
+                <Link
+                  href="/privacy"
                   className="hover:text-indigo-600 hover:translate-x-1 transition-all flex items-center justify-between w-full group"
                 >
                   <span className="group-hover:font-medium">Privacy Policy</span>
                   <ChevronRight className="h-3.5 w-3.5 text-indigo-400 group-hover:text-indigo-600 transition-colors shrink-0" />
-                </a>
+                </Link>
               </li>
-              <li>
-                <a
-                  href="#faq"
-                  onClick={(e) => { e.preventDefault(); scrollTo('faq'); }}
-                  className="hover:text-indigo-600 hover:translate-x-1 transition-all flex items-center justify-between w-full group"
-                >
-                  <span className="group-hover:font-medium">Contact Support</span>
-                  <ChevronRight className="h-3.5 w-3.5 text-indigo-400 group-hover:text-indigo-600 transition-colors shrink-0" />
-                </a>
-              </li>
+              {siteConfig.feedbackEmail && (
+                <li>
+                  <a
+                    href={`mailto:${siteConfig.feedbackEmail}`}
+                    className="hover:text-indigo-600 hover:translate-x-1 transition-all flex items-center justify-between w-full group"
+                  >
+                    <span className="group-hover:font-medium">Contact Support</span>
+                    <ChevronRight className="h-3.5 w-3.5 text-indigo-400 group-hover:text-indigo-600 transition-colors shrink-0" />
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
 
