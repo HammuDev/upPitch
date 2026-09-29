@@ -170,15 +170,15 @@ export const ConversionSection: React.FC = memo(() => {
             </div>
           </div>
 
-          {/* 5. 100% Privacy First */}
+          {/* 5. Browser-First Privacy */}
           <div className="rounded-2xl border border-indigo-100 bg-white p-5 sm:p-6 flex items-start gap-4 card-hover-lift shadow-sm">
             <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-teal-50 border border-teal-200/80 text-teal-600">
               <ShieldCheck className="h-5 w-5" />
             </div>
             <div className="space-y-1 min-w-0">
-              <h3 className="text-sm sm:text-base font-bold text-slate-900">100% Privacy First</h3>
+              <h3 className="text-sm sm:text-base font-bold text-slate-900">Browser-First Privacy</h3>
               <p className="text-xs text-slate-600 leading-relaxed font-normal">
-                Your data stays yours. We don&apos;t store or resell your information.
+                Profile and history remain in your browser (localStorage). Generation requests are processed via Gemini API with no database storage.
               </p>
             </div>
           </div>

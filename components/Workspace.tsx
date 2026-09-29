@@ -343,7 +343,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
                             setProfile(updated);
                             onSaveProfile(updated);
                           }}
-                          placeholder="Alex Dev"
+                          placeholder="e.g. Jane Doe"
                           className="cursor-text w-full rounded-lg border border-slate-200 bg-white px-2.5 py-1.5 text-xs text-slate-800 placeholder:text-slate-400 focus:outline-none focus:border-indigo-500"
                         />
                       </div>
@@ -477,6 +477,13 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
 
             {/* 5. PRIMARY CTA BUTTON */}
             <div className="space-y-2 pt-1">
+              {!profile.name?.trim() && (
+                <div className="rounded-xl border border-amber-200 bg-amber-50/90 p-2.5 sm:p-3 flex items-start gap-2 text-xs text-amber-800 animate-fade-in-up">
+                  <AlertCircle className="h-4 w-4 shrink-0 text-amber-600 mt-0.5" />
+                  <span>Add your name and title in the profile section so proposals are signed correctly.</span>
+                </div>
+              )}
+
               <button
                 type="button"
                 disabled={isGenerating}
@@ -498,7 +505,7 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
               </button>
 
               <p className="text-center text-[11px] text-slate-500">
-                100% dynamic AI generation with zero canned templates.
+                Dynamic AI generation with zero canned templates.
               </p>
             </div>
 
@@ -845,9 +852,12 @@ export const Workspace: React.FC<WorkspaceProps> = React.memo(({
               )}
             </div>
 
-            {/* Bottom Right Brand Mark */}
-            <div className="flex justify-end pt-3 sm:pt-4 border-t border-slate-200">
-              <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50/50 px-3 py-1 text-[10px] text-slate-600 font-mono">
+            {/* Bottom Footer: Disclaimer & Brand Mark */}
+            <div className="flex flex-col sm:flex-row items-center justify-between gap-2 pt-3 sm:pt-4 border-t border-slate-200">
+              <p className="text-[10.5px] text-slate-500 font-normal text-center sm:text-left">
+                AI drafts can be wrong. Review before sending. Not affiliated with Upwork.
+              </p>
+              <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-indigo-50/50 px-3 py-1 text-[10px] text-slate-600 font-mono shrink-0">
                 <span>Built for Freelancers by</span>
                 <span className="font-bold text-slate-900 flex items-center gap-1">
                   <span className="h-1.5 w-1.5 rounded-full bg-indigo-600" /> Hammad

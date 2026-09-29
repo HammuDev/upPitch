@@ -86,13 +86,6 @@ const jsonLdSchema = {
         price: '0',
         priceCurrency: 'USD',
       },
-      aggregateRating: {
-        '@type': 'AggregateRating',
-        ratingValue: '4.9',
-        ratingCount: '1480',
-        bestRating: '5',
-        worstRating: '1',
-      },
       author: {
         '@type': 'Organization',
         name: 'UpPitch AI',

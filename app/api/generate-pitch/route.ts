@@ -52,8 +52,14 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const freelancerName = profile?.name?.trim() || 'Hammad';
-    const freelancerRole = profile?.role?.trim() || 'Full-Stack Engineer';
+    const freelancerName = profile?.name?.trim();
+    if (!freelancerName) {
+      return NextResponse.json(
+        { error: 'Please add your name in the profile section.' },
+        { status: 400 }
+      );
+    }
+    const freelancerRole = profile?.role?.trim() || '';
     const userBio = profile?.bio?.trim() || '';
     const platform = channel || 'upwork';
     const chosenTone = tone || 'direct';

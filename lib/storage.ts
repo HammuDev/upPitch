@@ -1,25 +1,12 @@
 import { FreelancerProfile, HistoryItem } from '@/types';
 
 export const DEFAULT_PROFILE: FreelancerProfile = {
-  name: 'Alex Rivera',
-  role: 'Full-Stack Engineer & Next.js Specialist',
-  bio: 'Specialist in full-stack web applications, API integrations, and database performance optimization with 6+ years shipping high-converting software.',
-  experience: '6+ years freelance, Ex-Frontend Lead',
-  defaultCta: 'Open to a 3-minute video breakdown where I walk through the proposed architecture step-by-step?',
-  projects: [
-    {
-      id: 'proj-1',
-      title: 'Full-Stack B2B Analytics Dashboard',
-      metricOrLink: '0.8s load time & 99.99% uptime',
-      tags: ['Next.js', 'TypeScript', 'Tailwind', 'PostgreSQL'],
-    },
-    {
-      id: 'proj-2',
-      title: 'Real-time Payment & Webhook Pipeline',
-      metricOrLink: '$1.5M+ processed with zero race conditions',
-      tags: ['Stripe', 'Node.js', 'Redis', 'Webhooks'],
-    },
-  ],
+  name: '',
+  role: '',
+  bio: '',
+  experience: '',
+  defaultCta: '',
+  projects: [],
 };
 
 const PROFILE_KEY = 'uppitch_profile_v1';

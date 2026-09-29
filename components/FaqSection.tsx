@@ -21,7 +21,7 @@ const FAQS: FaqItem[] = [
   {
     question: 'How does the Project Bank and Proof Matching system work?',
     answer:
-      'You add your completed projects, technical stack tags, and quantifiable results (e.g. "$1.5M processed", "0.8s load time", "99.99% uptime") to your Project Bank. When you paste a job posting, UpPitch matches your selected case studies directly to the client’s stated requirements and weaves them naturally into the proposal narrative.',
+      'You add your completed projects, technical stack tags, and quantifiable results (e.g. "0.8s load time", "99.9% uptime", "zero webhook errors") to your Project Bank. When you paste a job posting, UpPitch matches your selected case studies directly to the client’s stated requirements and weaves them naturally into the proposal narrative.',
   },
   {
     question: 'Can I customize proposals for different platforms like Upwork, Cold Email, and LinkedIn?',
@@ -29,9 +29,9 @@ const FAQS: FaqItem[] = [
       'Yes! UpPitch provides 4 dedicated outreach modes: Upwork Proposals (structured, mobile-preview optimized), Cold Email (generates compelling subject lines + high-reply body), LinkedIn DMs (concise InMail format), and Twitter/X (direct and conversational).',
   },
   {
-    question: 'Is my personal data and Gemini API key secure?',
+    question: 'How is my personal data and Gemini API key handled?',
     answer:
-      'Yes, 100%. UpPitch is designed with a privacy-first architecture. All your profile information, project case studies, and proposal history are stored locally in your browser\'s local storage. Your Gemini API key is either securely stored in your local .env or browser configuration and is never logged or transmitted to third-party databases.',
+      'UpPitch uses a browser-first architecture. Your profile information, project case studies, and proposal history are stored locally in your browser (localStorage). When generating a pitch, request details are sent to our server and forwarded directly to the Google Gemini API without database persistence.',
   },
   {
     question: 'What is the difference between Variation A and Variation B?',

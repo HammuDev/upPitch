@@ -91,7 +91,7 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = React.memo(({
               required
               value={metricOrLink}
               onChange={(e) => setMetricOrLink(e.target.value)}
-              placeholder="e.g. 0.8s load time & $1.5M processed with zero webhook errors"
+              placeholder="e.g. 0.8s load time & 99.9% uptime with zero webhook errors"
               className="cursor-text w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 text-xs"
             />
           </div>

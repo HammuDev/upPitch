@@ -55,7 +55,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = React.memo(({ isOpen,
               <span>Direct Gemini AI Key</span>
             </div>
             <p className="text-[11px] text-slate-600 leading-relaxed">
-              Optional: Enter your Google Gemini API key if not set in server <code className="text-indigo-700 font-mono font-semibold">.env.local</code>. Stored securely in your browser.
+              Optional: Enter your Google Gemini API key if not set in server <code className="text-indigo-700 font-mono font-semibold">.env.local</code>. Stored in your browser (localStorage) and sent to our server with each request to call Gemini. Use a key you can rotate.
             </p>
           </div>
 

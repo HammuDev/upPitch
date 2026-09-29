@@ -118,13 +118,13 @@ export const ComparisonTable: React.FC = React.memo(() => {
                 <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 space-y-2.5">
                   <div className="flex items-baseline justify-between">
                     <div>
-                      <span className="text-2xl sm:text-3xl font-black text-rose-600 font-mono tracking-tight">
-                        &lt; 8%
+                      <span className="text-xl sm:text-2xl font-black text-rose-600 font-mono tracking-tight">
+                        Low
                       </span>
                       <span className="text-[11px] text-slate-500 ml-1.5 font-sans">reply rate</span>
                     </div>
                     <span className="text-[10.5px] font-mono font-semibold text-rose-700 bg-rose-100 px-2 py-0.5 rounded">
-                      92% Archived
+                      Often Archived
                     </span>
                   </div>
 
@@ -204,13 +204,13 @@ export const ComparisonTable: React.FC = React.memo(() => {
                 <div className="rounded-xl bg-indigo-50/70 border border-indigo-200 p-3.5 space-y-2.5">
                   <div className="flex items-baseline justify-between">
                     <div>
-                      <span className="text-2xl sm:text-3xl font-black text-indigo-900 font-mono tracking-tight">
-                        34.8%
+                      <span className="text-xl sm:text-2xl font-black text-indigo-900 font-mono tracking-tight">
+                        High
                       </span>
-                      <span className="text-[11px] text-emerald-700 font-bold ml-1.5 font-sans">avg. reply rate</span>
+                      <span className="text-[11px] text-emerald-700 font-bold ml-1.5 font-sans">response rate</span>
                     </div>
                     <span className="text-[10.5px] font-mono font-bold text-emerald-800 bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
-                      4.3x Higher
+                      Proof-Backed
                     </span>
                   </div>
 
@@ -240,7 +240,7 @@ export const ComparisonTable: React.FC = React.memo(() => {
                     <div>
                       <span className="font-semibold text-slate-900 block">Auto-Injected Proof</span>
                       <p className="text-[11px] text-slate-600 leading-snug">
-                        Selects matching project metrics from your personal bank ($1.5M processed, 99.9% uptime).
+                        Selects matching project metrics from your personal bank (e.g. verified metrics, tech tags).
                       </p>
                     </div>
                   </div>
@@ -260,7 +260,7 @@ export const ComparisonTable: React.FC = React.memo(() => {
               {/* Bottom Footer Meta */}
               <div className="pt-4 border-t border-indigo-100 flex items-center justify-between text-[11px] text-indigo-700 font-mono">
                 <span className="flex items-center gap-1.5 font-bold">
-                  <Zap className="h-3.5 w-3.5 text-indigo-600" /> Speed: &lt; 10s
+                  <Zap className="h-3.5 w-3.5 text-indigo-600" /> Speed: Rapid
                 </span>
                 <span className="text-emerald-800 font-bold bg-emerald-100 px-2 py-0.5 rounded border border-emerald-200">
                   Interviews Won
@@ -286,8 +286,8 @@ export const ComparisonTable: React.FC = React.memo(() => {
                 <div className="rounded-xl bg-slate-50 border border-slate-200 p-3.5 space-y-2.5">
                   <div className="flex items-baseline justify-between">
                     <div>
-                      <span className="text-2xl sm:text-3xl font-black text-amber-700 font-mono tracking-tight">
-                        12-15%
+                      <span className="text-xl sm:text-2xl font-black text-amber-700 font-mono tracking-tight">
+                        Moderate
                       </span>
                       <span className="text-[11px] text-slate-500 ml-1.5 font-sans">reply rate</span>
                     </div>
@@ -426,10 +426,10 @@ export const ComparisonTable: React.FC = React.memo(() => {
                 <div className="p-3.5 rounded-xl bg-white border border-emerald-200 space-y-2">
                   <div className="flex items-center justify-between text-[10px] font-mono text-emerald-700">
                     <span>First 140 Characters:</span>
-                    <span className="text-emerald-700 font-bold">100% Technical Match</span>
+                    <span className="text-emerald-700 font-bold">Technical Match</span>
                   </div>
                   <p className="text-xs font-mono text-emerald-900 leading-relaxed bg-emerald-50 p-2.5 rounded-lg border border-emerald-200 font-semibold">
-                    &quot;Saw the duplicate Stripe billing race condition in your Next.js API. Can lock Redis idempotency keys within 24h. Processed $1.5M with 0 drops.&quot;
+                    &quot;Saw the duplicate Stripe billing race condition in your Next.js API. Can lock Redis idempotency keys within 24h. Built similar high-volume webhook pipelines with 0 drops.&quot;
                   </p>
                   <p className="text-[11px] text-emerald-800 font-medium">
                     ⚡ Client immediately clicks into the proposal because the exact solution is in line 1.
@@ -439,7 +439,7 @@ export const ComparisonTable: React.FC = React.memo(() => {
 
               <div className="pt-3 border-t border-emerald-200 flex items-center justify-between text-[11px] font-mono text-emerald-800 font-bold">
                 <span>Client Status: Interview Booked</span>
-                <span>34.8% Reply Rate</span>
+                <span>Higher Response Rate</span>
               </div>
             </div>
 
@@ -556,11 +556,11 @@ export const ComparisonTable: React.FC = React.memo(() => {
         <div className="rounded-2xl border border-emerald-200 bg-white p-4 text-center space-y-1.5 transition-all duration-300 hover:border-emerald-300 hover:-translate-y-1 shadow-sm">
           <div className="text-xl sm:text-2xl font-black text-emerald-600 font-mono flex items-center justify-center gap-1">
             <TrendingUp className="h-5 w-5 text-emerald-600" />
-            34.8%
+            Proof-First
           </div>
-          <p className="text-[11px] text-slate-500 font-medium">Average Reply Rate</p>
+          <p className="text-[11px] text-slate-500 font-medium">Relevance Matching</p>
           <span className="inline-block text-[10px] text-emerald-800 bg-emerald-50 px-2 py-0.5 rounded font-mono font-semibold">
-            4.3x Above ChatGPT
+            Tailored to Brief
           </span>
         </div>
 
@@ -571,14 +571,14 @@ export const ComparisonTable: React.FC = React.memo(() => {
           </div>
           <p className="text-[11px] text-slate-500 font-medium">Generation Speed</p>
           <span className="inline-block text-[10px] text-indigo-700 bg-indigo-50 px-2 py-0.5 rounded font-mono font-semibold">
-            First-Mover Edge
+            Rapid Turnaround
           </span>
         </div>
 
         <div className="rounded-2xl border border-purple-100 bg-white p-4 text-center space-y-1.5 transition-all duration-300 hover:border-purple-300 hover:-translate-y-1 shadow-sm">
           <div className="text-xl sm:text-2xl font-black text-purple-600 font-mono flex items-center justify-center gap-1">
             <ShieldCheck className="h-5 w-5 text-purple-600" />
-            100%
+            Focused
           </div>
           <p className="text-[11px] text-slate-500 font-medium">Zero Generic Fluff</p>
           <span className="inline-block text-[10px] text-purple-700 bg-purple-50 px-2 py-0.5 rounded font-mono font-semibold">

@@ -32,7 +32,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
   };
 
   const handleQuickCopy = () => {
-    const text = `Hi,\nI analyzed your duplicate Stripe billing race condition. Having built and audited similar Next.js multi-tenant checkout pipelines, this happens when webhooks process concurrently without an idempotent distributed lock.\n\n• Implemented Redis distributed locks for 3 high-volume SaaS apps\n• 100% verified test coverage in staging within 24 hours`;
+    const text = `Hi,\nI analyzed your duplicate Stripe billing race condition. Having built and audited similar Next.js multi-tenant checkout pipelines, this happens when webhooks process concurrently without an idempotent distributed lock.\n\n• Implemented Redis distributed locks for 3 high-volume SaaS apps\n• Verified test coverage in staging within 24 hours`;
     navigator.clipboard.writeText(text);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
@@ -41,12 +41,12 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
   return (
     <section className="relative mx-auto max-w-7xl px-3.5 sm:px-6 lg:px-8 pt-2 sm:pt-6 pb-6 sm:pb-10 z-10" aria-labelledby="hero-title">
       <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-        
+
         {/* ========================================================= */}
         {/* LEFT COLUMN: HERO HEADLINE, CTAS & SOCIAL PROOF           */}
         {/* ========================================================= */}
         <div className="lg:col-span-6 flex flex-col items-start text-left space-y-4 sm:space-y-6 z-10">
-          
+
           {/* 1. Pill Badge */}
           <div className="inline-flex items-center gap-2 rounded-full border border-indigo-200/80 bg-indigo-50/90 px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-semibold text-indigo-700 shadow-xs hover:border-indigo-300 transition-all duration-200">
             <Sparkles className="h-3.5 w-3.5 text-indigo-600" />
@@ -83,7 +83,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
 
             <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-white px-3 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-medium text-slate-700 shadow-xs">
               <CheckCircle2 className="h-3.5 w-3.5 text-indigo-600 shrink-0" />
-              <span>100% Personalized</span>
+              <span>Tailored Outreach</span>
             </div>
 
             <div className="inline-flex items-center gap-1.5 rounded-full border border-indigo-100 bg-white px-3 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-medium text-slate-700 shadow-xs">
@@ -117,26 +117,9 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
 
           {/* 6. Social Proof */}
           <div className="flex items-center gap-3 pt-2">
-            <div className="flex -space-x-2">
-              <img
-                className="inline-block h-7 w-7 sm:h-8 sm:w-8 rounded-full ring-2 ring-white object-cover shadow-xs"
-                src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=100&auto=format&fit=crop&q=80"
-                alt="Sarah"
-              />
-              <img
-                className="inline-block h-7 w-7 sm:h-8 sm:w-8 rounded-full ring-2 ring-white object-cover shadow-xs"
-                src="https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=100&auto=format&fit=crop&q=80"
-                alt="James"
-              />
-              <img
-                className="inline-block h-7 w-7 sm:h-8 sm:w-8 rounded-full ring-2 ring-white object-cover shadow-xs"
-                src="https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&auto=format&fit=crop&q=80"
-                alt="Ayesha"
-              />
-            </div>
             <p className="text-[11px] sm:text-xs text-slate-700 font-medium">
-              <span className="font-bold text-slate-900">Join 10,000+ freelancers</span>
-              <span className="block text-[10px] sm:text-[11px] text-slate-500 font-normal">who&apos;ve landed better clients with UpPitch</span>
+              <span className="font-bold text-slate-900">Free while in beta</span>
+              <span className="block text-[10px] sm:text-[11px] text-slate-500 font-normal">Generate tailored proposals with zero generic templates</span>
             </p>
           </div>
 
@@ -146,7 +129,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
         {/* RIGHT COLUMN: 3D ISOMETRIC FLOATING PROPOSAL ARTWORK      */}
         {/* ========================================================= */}
         <div className="lg:col-span-6 relative flex items-center justify-center pt-6 sm:pt-8 lg:pt-0">
-          
+
           {/* ======================================================= */}
           {/* UNCROPPED ORGANIC PURPLE WAVE BACKDROP (FULL CANVAS)    */}
           {/* ======================================================= */}
@@ -242,7 +225,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
           {/* ======================================================= */}
           {/* 3D FACETED CRYSTAL DIAMONDS                            */}
           {/* ======================================================= */}
-          
+
           {/* 1. Mid-Left Diamond */}
           <div className="absolute top-1/2 -left-6 sm:-left-8 z-20 w-10 h-10 sm:w-13 sm:h-13 opacity-90 animate-float-slow hidden xs:block pointer-events-none">
             <svg viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg" className="w-full h-full drop-shadow-[0_12px_24px_rgba(139,92,246,0.45)] -rotate-12">
@@ -269,7 +252,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
           {/* (Exact layout preserved with polished styling)          */}
           {/* ======================================================= */}
           <div className="relative w-full max-w-lg rounded-2xl sm:rounded-3xl border border-white/95 bg-white/95 p-4 sm:p-6 sm:p-7 shadow-[0_30px_70px_-15px_rgba(124,58,237,0.22)] backdrop-blur-xl z-10 transform -rotate-1 sm:-rotate-2 hover:rotate-0 transition-transform duration-500 space-y-3 sm:space-y-5">
-            
+
             {/* macOS Window Controls & Filename Tag */}
             <div className="flex items-center justify-between border-b border-slate-100 pb-2.5 sm:pb-3.5">
               <div className="flex items-center gap-1.5 sm:gap-2">
@@ -280,7 +263,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
                   proposal_analysis.ai
                 </span>
               </div>
-              
+
               <div className="flex items-center gap-1 rounded-full bg-indigo-50 border border-indigo-200/80 px-2 sm:px-2.5 py-0.5 text-[9px] sm:text-[10px] font-bold text-indigo-700 font-mono shrink-0">
                 <span className="h-1.5 w-1.5 rounded-full bg-indigo-600 animate-pulse" />
                 <span>AI Hook Active</span>
@@ -296,7 +279,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
                     First Sentence Optimized
                   </span>
                 </div>
-                
+
                 <p className="text-[11px] sm:text-xs text-slate-700 leading-relaxed font-normal">
                   <strong className="text-slate-900 font-bold">&ldquo;Hi,</strong> I analyzed your duplicate Stripe billing race condition. Having built and audited similar Next.js multi-tenant checkout pipelines, this happens when webhooks process concurrently without an idempotent distributed lock...&rdquo;
                 </p>
@@ -320,7 +303,7 @@ export const HeroHeader: React.FC<HeroHeaderProps> = memo(({
               <div className="flex items-center gap-1.5 sm:gap-2">
                 <span className="h-2 w-2 sm:h-2.5 sm:w-2.5 rounded-full bg-emerald-500 shadow-[0_0_8px_rgba(16,185,129,0.6)]" />
                 <span className="text-[11px] sm:text-xs font-bold text-emerald-700 font-mono tracking-tight">
-                  100% Match
+                  Sample Match
                 </span>
               </div>
 

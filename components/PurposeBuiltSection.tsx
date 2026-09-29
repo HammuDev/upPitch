@@ -22,7 +22,7 @@ export const PurposeBuiltSection: React.FC<PurposeBuiltSectionProps> = memo(({
   const [activeTab, setActiveTab] = useState<'analysis' | 'proposal' | 'cover-letter'>('analysis');
   const [copied, setCopied] = useState(false);
 
-  const sampleProposal = `Hi there,\n\nI reviewed your brief regarding the duplicate Stripe billing race condition. Having built and debugged high-volume webhook listeners processing $2M+/mo, here is the exact resolution plan:\n\n• Audit: Inspect idempotent key validation and concurrent webhook arrival in Redis lock table.\n• Fix: Wrap customer payment update in an atomic serializable PostgreSQL transaction with mutex locks.\n• Verify: Execute automated 100-event concurrent test script in staging within 24 hours.\n\nWould you be open to a quick 3-minute video walkthrough showing how we solved this exact lock contention last month?\n\nBest regards,\nAlex Dev\nFull-Stack Engineer`;
+  const sampleProposal = `Hi there,\n\nI reviewed your brief regarding the duplicate Stripe billing race condition. Having built and debugged high-volume webhook listeners, here is the exact resolution plan:\n\n• Audit: Inspect idempotent key validation and concurrent webhook arrival in Redis lock table.\n• Fix: Wrap customer payment update in an atomic serializable PostgreSQL transaction with mutex locks.\n• Verify: Execute automated 100-event concurrent test script in staging within 24 hours.\n\nWould you be open to a quick 3-minute video walkthrough showing how we solved this exact lock contention last month?\n\nBest regards,\n[Your Name]\n[Your Title]`;
 
   const handleUseProposal = () => {
     if (onLoadSampleProposal) {
@@ -152,7 +152,7 @@ export const PurposeBuiltSection: React.FC<PurposeBuiltSectionProps> = memo(({
               <div className="rounded-xl border border-indigo-100 bg-slate-50/70 p-3 flex items-center justify-between space-x-2">
                 <div>
                   <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-                    Match Score
+                    Match Score (Sample)
                   </div>
                   <div className="text-lg font-extrabold text-slate-900 mt-0.5">82%</div>
                 </div>
@@ -184,26 +184,26 @@ export const PurposeBuiltSection: React.FC<PurposeBuiltSectionProps> = memo(({
               {/* Metric 2: Key Skills Found */}
               <div className="rounded-xl border border-indigo-100 bg-slate-50/70 p-3 space-y-1">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-                  Key Skills Found
+                  Sample Skills Found
                 </div>
                 <div className="text-xs font-bold text-indigo-700 truncate">
                   React, Next.js, Node.js
                 </div>
                 <div className="text-[10px] text-slate-500 font-mono">
-                  +3 verified proofs
+                  Sample matching
                 </div>
               </div>
 
               {/* Metric 3: Estimated Rate */}
               <div className="rounded-xl border border-indigo-100 bg-slate-50/70 p-3 space-y-1">
                 <div className="text-[10px] font-bold uppercase tracking-wider text-slate-500 font-mono">
-                  Estimated Rate
+                  Estimated Rate (Sample)
                 </div>
                 <div className="text-base font-extrabold text-purple-700">
                   $90+/hr
                 </div>
                 <div className="text-[10px] text-slate-500 font-mono">
-                  High-ticket tier
+                  Sample output
                 </div>
               </div>
 

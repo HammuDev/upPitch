@@ -140,10 +140,10 @@ export const SeoFeatures: React.FC = memo(() => {
           <div className="rounded-xl border border-white/[0.06] bg-[#070A14] p-4 sm:p-5 space-y-2 transition-colors duration-150 hover:border-cyan-500/40">
             <div className="flex items-center gap-2 text-cyan-400">
               <ShieldCheck className="h-4 w-4 shrink-0" />
-              <h3 className="text-xs sm:text-sm font-bold text-white">100% Privacy First</h3>
+              <h3 className="text-xs sm:text-sm font-bold text-white">Browser-First Privacy</h3>
             </div>
             <p className="text-xs text-slate-400 leading-relaxed">
-              All profiles, project proofs, and proposal history are stored locally in your browser.
+              All profiles, project proofs, and proposal history are stored locally in your browser (localStorage).
             </p>
           </div>
 

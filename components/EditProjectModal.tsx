@@ -98,7 +98,7 @@ export const EditProjectModal: React.FC<EditProjectModalProps> = React.memo(({
               required
               value={metricOrLink}
               onChange={(e) => setMetricOrLink(e.target.value)}
-              placeholder="e.g. 0.8s load time & $1.5M processed"
+              placeholder="e.g. 0.8s load time & 99.9% uptime"
               className="cursor-text w-full rounded-xl border border-slate-200 bg-slate-50 px-3.5 py-2.5 text-slate-900 placeholder:text-slate-400 focus:bg-white focus:outline-none focus:border-indigo-500 text-xs"
             />
           </div>

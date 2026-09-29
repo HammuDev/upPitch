@@ -183,7 +183,7 @@ export default function Home() {
     handleLoadSampleBrief();
     setGeneratedPitches({
       'var-a': proposalText,
-      'var-b': `Hi there,\n\nI reviewed your brief regarding the duplicate Stripe billing race condition. Having analyzed similar multi-tenant billing pipelines, this is typically caused by webhook concurrency without an atomic distributed lock.\n\n• Inspect: Audit PostgreSQL isolation level during concurrent webhook handling.\n• Implement: Redis-backed distributed lock with idempotent key verification.\n• Test: Run 100-event concurrent staging simulation.\n\nWould you be open to a 3-minute video breakdown of our reference architecture?\n\nBest regards,\nAlex Dev\nFull-Stack Engineer`,
+      'var-b': `Hi there,\n\nI reviewed your brief regarding the duplicate Stripe billing race condition. Having analyzed similar multi-tenant billing pipelines, this is typically caused by webhook concurrency without an atomic distributed lock.\n\n• Inspect: Audit PostgreSQL isolation level during concurrent webhook handling.\n• Implement: Redis-backed distributed lock with idempotent key verification.\n• Test: Run 100-event concurrent staging simulation.\n\nWould you be open to a 3-minute video breakdown of our reference architecture?\n\nBest regards,\n[Your Name]\n[Your Title]`,
       detectedProblems: [
         'Stripe webhook race condition during concurrent checkouts',
         'Duplicate customer billing records in database',

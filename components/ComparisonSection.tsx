@@ -45,7 +45,7 @@ export const ComparisonSection: React.FC = memo(() => {
                 <XCircle className="h-6 w-6" />
               </div>
               <span className="rounded-full bg-rose-50 border border-rose-200 px-3 py-1 text-[11px] font-bold text-rose-700">
-                &lt; 4% Reply Rate
+                Low Reply Rate
               </span>
             </div>
 
@@ -76,7 +76,7 @@ export const ComparisonSection: React.FC = memo(() => {
 
           <div className="pt-4 border-t border-slate-100 flex items-center justify-between text-[11px] font-mono text-slate-500">
             <span>Result:</span>
-            <span className="font-bold text-rose-600">Archived in 5s</span>
+            <span className="font-bold text-rose-600">Archived Quickly</span>
           </div>
 
         </div>
@@ -92,7 +92,7 @@ export const ComparisonSection: React.FC = memo(() => {
                 <Clock className="h-6 w-6" />
               </div>
               <span className="rounded-full bg-amber-50 border border-amber-200 px-3 py-1 text-[11px] font-bold text-amber-700">
-                ~12% Reply Rate
+                Time-Intensive
               </span>
             </div>
 
@@ -145,7 +145,7 @@ export const ComparisonSection: React.FC = memo(() => {
                 <Sparkles className="h-6 w-6" />
               </div>
               <span className="rounded-full bg-emerald-50 border border-emerald-200 px-3 py-1 text-[11px] font-bold text-emerald-700 font-mono">
-                42%+ Interview Rate
+                High Relevance
               </span>
             </div>
 
@@ -168,7 +168,7 @@ export const ComparisonSection: React.FC = memo(() => {
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
-                <span><strong>10-Second Speed:</strong> Apply first while the client is actively reading bids</span>
+                <span><strong>Fast Generation:</strong> Apply quickly while the client is actively reading bids</span>
               </li>
               <li className="flex items-start gap-2.5">
                 <CheckCircle2 className="h-4 w-4 text-emerald-600 shrink-0 mt-0.5" />
@@ -179,7 +179,7 @@ export const ComparisonSection: React.FC = memo(() => {
 
           <div className="pt-4 border-t border-indigo-100 flex items-center justify-between text-[11px] font-mono text-slate-600">
             <span>Result:</span>
-            <span className="font-extrabold text-indigo-700">3x More Replies &amp; Hires</span>
+            <span className="font-extrabold text-indigo-700">Proof-Backed &amp; Relevant</span>
           </div>
 
         </div>
@@ -191,11 +191,11 @@ export const ComparisonSection: React.FC = memo(() => {
         <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-center">
           <div className="space-y-1">
             <p className="text-xs text-slate-500">Proposal Speed</p>
-            <p className="text-lg sm:text-xl font-extrabold text-indigo-600 font-mono">10 Seconds</p>
+            <p className="text-lg sm:text-xl font-extrabold text-indigo-600 font-mono">Fast</p>
           </div>
           <div className="space-y-1 border-l border-slate-100">
             <p className="text-xs text-slate-500">Proof Matching</p>
-            <p className="text-lg sm:text-xl font-extrabold text-emerald-600 font-mono">100% Automated</p>
+            <p className="text-lg sm:text-xl font-extrabold text-emerald-600 font-mono">Automated</p>
           </div>
           <div className="space-y-1 border-l border-slate-100">
             <p className="text-xs text-slate-500">Mobile Hook</p>
@@ -203,7 +203,7 @@ export const ComparisonSection: React.FC = memo(() => {
           </div>
           <div className="space-y-1 border-l border-slate-100">
             <p className="text-xs text-slate-500">Data Privacy</p>
-            <p className="text-lg sm:text-xl font-extrabold text-slate-900 font-mono">100% Local</p>
+            <p className="text-lg sm:text-xl font-extrabold text-slate-900 font-mono">Browser Storage</p>
           </div>
         </div>
       </div>
