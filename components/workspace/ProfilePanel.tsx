@@ -1,13 +1,17 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import {
   ChevronDown,
   Trash2,
   Pencil,
   Link as LinkIcon,
+  Download,
+  Upload,
+  AlertCircle,
 } from 'lucide-react';
 import { FreelancerProfile, ProjectItem } from '@/types';
+import { normalizeStoredProfile } from '@/lib/storage';
 
 interface ProfilePanelProps {
   profile: FreelancerProfile;
@@ -31,11 +35,82 @@ export const ProfilePanel: React.FC<ProfilePanelProps> = React.memo(({
   onDeleteProject,
 }) => {
   const [isAccordionOpen, setIsAccordionOpen] = useState(true);
+  const [pendingImport, setPendingImport] = useState<FreelancerProfile | null>(null);
+  const [importError, setImportError] = useState<string | null>(null);
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
 
   const handleToggleProject = (id: string) => {
     setSelectedProjectIds((prev) =>
       prev.includes(id) ? prev.filter((pId) => pId !== id) : [...prev, id]
     );
+  };
+
+  const handleExportProfile = () => {
+    const cleanProfile = {
+      name: profile.name,
+      role: profile.role,
+      bio: profile.bio,
+      experience: profile.experience || '',
+      defaultCta: profile.defaultCta || '',
+      projects: profile.projects || [],
+    };
+    const blob = new Blob([JSON.stringify(cleanProfile, null, 2)], {
+      type: 'application/json',
+    });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    const cleanSlug = profile.name ? profile.name.toLowerCase().replace(/[^a-z0-9]+/g, '-') : 'profile';
+    a.download = `uppitch-${cleanSlug}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setImportError(null);
+    const file = e.target.files?.[0];
+    if (!file) return;
+
+    // Reset input so re-selecting same file triggers onChange
+    e.target.value = '';
+
+    if (file.size > 100 * 1024) {
+      setImportError('File exceeds the 100 KB limit. Please select a valid profile JSON file.');
+      return;
+    }
+
+    const reader = new FileReader();
+    reader.onload = (event) => {
+      try {
+        const text = event.target?.result;
+        if (typeof text !== 'string') {
+          throw new Error('Invalid file content');
+        }
+        const parsed = JSON.parse(text);
+        if (!parsed || typeof parsed !== 'object') {
+          throw new Error('JSON root must be an object');
+        }
+        const normalized = normalizeStoredProfile(parsed);
+        setPendingImport(normalized);
+      } catch {
+        setImportError('Invalid JSON file. Please ensure the file is a valid profile backup.');
+      }
+    };
+    reader.onerror = () => {
+      setImportError('Failed to read file.');
+    };
+    reader.readAsText(file);
+  };
+
+  const handleConfirmImport = () => {
+    if (!pendingImport) return;
+    setProfile(pendingImport);
+    onSaveProfile(pendingImport);
+    setSelectedProjectIds(pendingImport.projects.map((p) => p.id));
+    setPendingImport(null);
+    setImportError(null);
   };
 
   const selectedCount = profile.projects.filter((p) =>
@@ -44,25 +119,67 @@ export const ProfilePanel: React.FC<ProfilePanelProps> = React.memo(({
 
   return (
     <div className="rounded-xl border border-indigo-100 bg-slate-50/60 overflow-hidden transition-all shadow-xs">
-      <button
-        type="button"
-        onClick={() => setIsAccordionOpen(!isAccordionOpen)}
-        className="cursor-pointer w-full flex items-center justify-between p-3 sm:p-3.5 text-left hover:bg-indigo-50/40 transition-colors"
-      >
-        <div className="flex items-center gap-2">
+      {/* Hidden file input for import */}
+      <input
+        type="file"
+        ref={fileInputRef}
+        onChange={handleFileSelect}
+        accept=".json,application/json"
+        className="hidden"
+      />
+
+      <div className="w-full flex items-center justify-between p-3 sm:p-3.5 hover:bg-indigo-50/40 transition-colors">
+        <button
+          type="button"
+          onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+          className="cursor-pointer flex items-center gap-2 text-left flex-1"
+        >
           <span className="text-xs font-bold text-slate-800">
             Freelancer Profile &amp; Project Proof Vault
           </span>
           <span className="rounded-full bg-emerald-50 border border-emerald-200 px-2 py-0.2 text-[9.5px] sm:text-[10px] font-semibold text-emerald-700 font-mono">
             Ready
           </span>
+        </button>
+
+        <div className="flex items-center gap-2">
+          {/* Export / Import Buttons */}
+          <div className="flex items-center gap-1.5 mr-1 text-[11px] font-medium">
+            <button
+              type="button"
+              onClick={handleExportProfile}
+              className="cursor-pointer inline-flex items-center gap-1 text-slate-600 hover:text-indigo-600 transition-colors"
+              title="Export profile and projects as JSON"
+            >
+              <Download className="h-3 w-3" />
+              <span className="hidden xs:inline">Export</span>
+            </button>
+            <span className="text-slate-300">|</span>
+            <button
+              type="button"
+              onClick={() => fileInputRef.current?.click()}
+              className="cursor-pointer inline-flex items-center gap-1 text-slate-600 hover:text-indigo-600 transition-colors"
+              title="Import profile from JSON file (max 100 KB)"
+            >
+              <Upload className="h-3 w-3" />
+              <span className="hidden xs:inline">Import</span>
+            </button>
+          </div>
+
+          <button
+            type="button"
+            onClick={() => setIsAccordionOpen(!isAccordionOpen)}
+            className="cursor-pointer p-0.5 text-slate-500 hover:text-indigo-600 transition-colors"
+            aria-label="Toggle profile accordion"
+          >
+            <ChevronDown
+              className={`h-4 w-4 shrink-0 transition-transform duration-300 ${
+                isAccordionOpen ? 'rotate-180 text-indigo-600' : ''
+              }`}
+            />
+          </button>
         </div>
-        <ChevronDown
-          className={`h-4 w-4 text-slate-500 shrink-0 transition-transform duration-300 ${
-            isAccordionOpen ? 'rotate-180 text-indigo-600' : ''
-          }`}
-        />
-      </button>
+      </div>
 
       <div
         className={`grid transition-all duration-300 ease-in-out ${
@@ -71,6 +188,50 @@ export const ProfilePanel: React.FC<ProfilePanelProps> = React.memo(({
       >
         <div className="overflow-hidden">
           <div className="p-3 sm:p-3.5 pt-0 space-y-3.5 border-t border-slate-200/80">
+            {/* Inline Import Error Alert */}
+            {importError && (
+              <div className="mt-3 rounded-lg border border-rose-200 bg-rose-50 p-2.5 flex items-start justify-between gap-2 text-xs text-rose-800 animate-fade-in-up">
+                <div className="flex items-start gap-1.5">
+                  <AlertCircle className="h-3.5 w-3.5 text-rose-600 shrink-0 mt-0.5" />
+                  <span>{importError}</span>
+                </div>
+                <button
+                  type="button"
+                  onClick={() => setImportError(null)}
+                  className="cursor-pointer font-bold text-rose-600 hover:underline"
+                >
+                  Dismiss
+                </button>
+              </div>
+            )}
+
+            {/* Inline Pending Import Confirmation */}
+            {pendingImport && (
+              <div className="mt-3 rounded-lg border border-indigo-200 bg-indigo-50/90 p-3 space-y-2 animate-fade-in-up">
+                <div className="text-xs font-bold text-indigo-950">
+                  Import profile: &quot;{pendingImport.name || 'Anonymous'}&quot; ({pendingImport.projects.length} case studies)?
+                </div>
+                <p className="text-[11px] text-indigo-800 leading-tight">
+                  This will replace your current profile and case studies in local storage.
+                </p>
+                <div className="flex items-center gap-2 pt-1">
+                  <button
+                    type="button"
+                    onClick={handleConfirmImport}
+                    className="cursor-pointer rounded-md bg-indigo-600 px-2.5 py-1 text-xs font-bold text-white hover:bg-indigo-700 transition-colors shadow-2xs"
+                  >
+                    Confirm Replace
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => setPendingImport(null)}
+                    className="cursor-pointer rounded-md border border-slate-200 bg-white px-2.5 py-1 text-xs font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                  >
+                    Cancel
+                  </button>
+                </div>
+              </div>
+            )}
             {/* Freelancer Name & Role */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5 pt-3">
               <div>

@@ -26,6 +26,13 @@ export const generatePitchSchema = z.object({
   apiKey: z.string().max(200).optional(),
 });
 
+export const refinePitchSchema = z.object({
+  text: z.string().trim().min(20).max(4000),
+  instruction: z.literal('shorten'),
+  channel: z.enum(['upwork', 'cold-email', 'linkedin', 'twitter']).default('upwork'),
+  apiKey: z.string().max(200).optional(),
+});
+
 // Lenient schemas for localStorage persistence & backward compatibility
 export const storedProjectSchema = z.object({
   id: z.string().default(() => 'proj-' + Math.random().toString(36).slice(2, 9)),

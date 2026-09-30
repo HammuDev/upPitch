@@ -334,3 +334,69 @@ export function checkProposalQuality({
 
   return issues;
 }
+
+/**
+ * Validates a shortened proposal against the original text:
+ * 1. Checks that the opening line is preserved.
+ * 2. Ensures no banned buzzwords/fluff phrases are present.
+ * 3. Confirms no new/invented numbers are introduced.
+ */
+export function validateShortenedProposal(
+  originalText: string,
+  shortenedText: string
+): { isValid: boolean; reason?: string } {
+  const cleanOriginal = sanitizePlainText(originalText);
+  const cleanShortened = sanitizePlainText(shortenedText);
+
+  if (!cleanShortened) {
+    return { isValid: false, reason: 'Shortened proposal was empty.' };
+  }
+
+  // 1. Opening line check (must match original opening line)
+  const origFirstLine = cleanOriginal.split('\n')[0]?.trim().toLowerCase() || '';
+  const shortFirstLine = cleanShortened.split('\n')[0]?.trim().toLowerCase() || '';
+
+  if (origFirstLine && shortFirstLine) {
+    const normOrig = origFirstLine.replace(/[^a-z0-9]/g, '');
+    const normShort = shortFirstLine.replace(/[^a-z0-9]/g, '');
+    if (normOrig && normShort && !normShort.startsWith(normOrig) && !normOrig.startsWith(normShort)) {
+      return { isValid: false, reason: 'Opening line was altered.' };
+    }
+  }
+
+  // 2. Banned fluff check
+  for (const phrase of BANNED_FLUFF_PHRASES) {
+    const pattern = new RegExp(
+      `\\b${escapeRegex(phrase).replace(/\\ /g, '\\s+')}\\b`,
+      'i'
+    );
+    if (pattern.test(cleanShortened)) {
+      return { isValid: false, reason: `Contained banned fluff: "${phrase}"` };
+    }
+  }
+
+  // 3. No new numbers check
+  const NUMBER_TOKEN_REGEX = /\b\d+(?:[.,]\d+)?\b/g;
+
+  const digitConvertedOrig = convertWordNumbersToDigits(cleanOriginal);
+  const origNumberMatches = digitConvertedOrig.match(NUMBER_TOKEN_REGEX) || [];
+  const origNumberSet = new Set<string>();
+
+  for (const num of origNumberMatches) {
+    origNumberSet.add(num);
+    origNumberSet.add(num.replace(/,/g, ''));
+  }
+
+  const digitConvertedShort = convertWordNumbersToDigits(cleanShortened);
+  const shortNumberMatches = digitConvertedShort.match(NUMBER_TOKEN_REGEX) || [];
+
+  for (const numStr of shortNumberMatches) {
+    if (numStr === '3') continue; // Standard 3-minute Loom walkthrough allowed
+    const cleanNum = numStr.replace(/,/g, '');
+    if (!origNumberSet.has(numStr) && !origNumberSet.has(cleanNum)) {
+      return { isValid: false, reason: `Introduced unverified number: "${numStr}"` };
+    }
+  }
+
+  return { isValid: true };
+}

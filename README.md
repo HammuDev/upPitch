@@ -8,7 +8,7 @@ UpPitch converts client job postings (Upwork, Cold Email, LinkedIn InMail, Twitt
 
 ## 📸 Screenshots
 
-<!-- Replace with production product screenshot / GIF demo -->
+<!-- TODO: Add production product screenshot / GIF demo before public v1 launch -->
 ```
 +-----------------------------------------------------------------------+
 |  [ UpPitch Workspace ]                                                |
@@ -114,6 +114,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `UPSTASH_REDIS_REST_URL` | No | Upstash Redis REST URL for distributed rate limiting. | `undefined` (in-memory) |
 | `UPSTASH_REDIS_REST_TOKEN`| No | Upstash Redis REST token for rate limiting authentication. | `undefined` |
 | `NEXT_PUBLIC_SITE_URL` | No | Canonical public domain used for sitemap, robots, and OpenGraph. | `https://uppitch.vercel.app` |
+| `NEXT_PUBLIC_FEEDBACK_EMAIL` | No | Optional support email address for the footer Contact link. | `undefined` |
 | `NEXT_PUBLIC_TWITTER_HANDLE` | No | Optional Twitter/X creator handle for social graph metadata. | `undefined` |
 
 ---

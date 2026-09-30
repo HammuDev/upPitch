@@ -23,6 +23,27 @@ import { useModals } from '@/lib/hooks/useModals';
 import { generatePitchWithGemini } from '@/lib/pitchGenerator';
 import { SAMPLE_BRIEF, SAMPLE_PROPOSAL_B, SAMPLE_DETECTED_PROBLEMS } from '@/lib/constants';
 
+function createHistoryRecord(
+  res: GeneratedPitches,
+  jobText: string,
+  channel: Channel,
+  tone: Tone
+): HistoryItem {
+  const now = new Date();
+  return {
+    id: 'hist-' + Date.now(),
+    timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
+    createdAt: now.toISOString(),
+    channel,
+    tone,
+    variationName: 'Variation A (Direct)',
+    pitchText: res['var-a'],
+    pitchTextB: res['var-b'],
+    subjectLine: res.subjectLine,
+    jobSnippet: jobText.substring(0, 120),
+  };
+}
+
 export default function Home() {
   const [channel, setChannel] = useState<Channel>('upwork');
   const [tone, setTone] = useState<Tone>('direct');
@@ -68,22 +89,7 @@ export default function Home() {
       });
 
       setGeneratedPitches(res);
-
-      const now = new Date();
-      const newHistoryItem: HistoryItem = {
-        id: 'hist-' + Date.now(),
-        timestamp: now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-        createdAt: now.toISOString(),
-        channel,
-        tone,
-        variationName: 'Variation A (Direct)',
-        pitchText: res['var-a'],
-        pitchTextB: res['var-b'],
-        subjectLine: res.subjectLine,
-        jobSnippet: jobText.substring(0, 120),
-      };
-
-      addHistoryItem(newHistoryItem);
+      addHistoryItem(createHistoryRecord(res, jobText, channel, tone));
     } catch (err: unknown) {
       console.error('Generation failed:', err);
       const msg = err instanceof Error ? err.message : 'Failed to generate proposal via Gemini AI.';
@@ -123,20 +129,11 @@ export default function Home() {
     setErrorMessage(null);
   }, []);
 
-  const handleClearHistory = useCallback(() => {
-    if (confirm('Clear all proposal history?')) {
-      clearHistory();
-    }
-  }, [clearHistory]);
-
   const scrollToWorkspace = useCallback(() => {
     const el = document.getElementById('workspace');
     if (el) {
       el.scrollIntoView({ behavior: 'smooth' });
-      setTimeout(() => {
-        const textarea = el.querySelector('textarea');
-        if (textarea) textarea.focus();
-      }, 400);
+      setTimeout(() => el.querySelector('textarea')?.focus(), 400);
     }
   }, []);
 
@@ -210,7 +207,7 @@ export default function Home() {
         isOpen={modals.isHistoryOpen}
         onClose={modals.handleCloseHistory}
         history={history}
-        onClearHistory={handleClearHistory}
+        onClearHistory={clearHistory}
         onLoadPitch={handleLoadPitchFromHistory}
       />
 

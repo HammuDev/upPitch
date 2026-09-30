@@ -19,9 +19,11 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
   onLoadPitch,
 }) => {
   const [copiedId, setCopiedId] = useState<string | null>(null);
+  const [confirmClear, setConfirmClear] = useState(false);
 
   React.useEffect(() => {
     if (!isOpen) return;
+    setConfirmClear(false);
     const handleKeyDown = (e: KeyboardEvent) => {
       if (e.key === 'Escape') {
         onClose();
@@ -66,13 +68,36 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
 
             <div className="flex items-center gap-2">
               {history.length > 0 && (
-                <button
-                  type="button"
-                  onClick={onClearHistory}
-                  className="cursor-pointer text-xs text-rose-600 hover:underline mr-1 sm:mr-2 font-medium"
-                >
-                  Clear All
-                </button>
+                confirmClear ? (
+                  <div className="flex items-center gap-1.5 mr-1">
+                    <span className="text-[11px] font-semibold text-rose-700">Clear?</span>
+                    <button
+                      type="button"
+                      onClick={() => {
+                        onClearHistory();
+                        setConfirmClear(false);
+                      }}
+                      className="cursor-pointer rounded bg-rose-600 px-2 py-0.5 text-[11px] font-bold text-white hover:bg-rose-700 transition-colors shadow-2xs"
+                    >
+                      Yes
+                    </button>
+                    <button
+                      type="button"
+                      onClick={() => setConfirmClear(false)}
+                      className="cursor-pointer rounded border border-slate-200 bg-white px-2 py-0.5 text-[11px] font-medium text-slate-600 hover:bg-slate-50 transition-colors"
+                    >
+                      No
+                    </button>
+                  </div>
+                ) : (
+                  <button
+                    type="button"
+                    onClick={() => setConfirmClear(true)}
+                    className="cursor-pointer text-xs text-rose-600 hover:underline mr-1 sm:mr-2 font-medium"
+                  >
+                    Clear All
+                  </button>
+                )
               )}
               <button
                 type="button"

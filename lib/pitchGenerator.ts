@@ -77,3 +77,59 @@ export async function generatePitchWithGemini({
     gaps: Array.isArray(data.gaps) ? data.gaps : undefined,
   };
 }
+
+export async function refinePitchWithGemini({
+  text,
+  instruction = 'shorten',
+  channel = 'upwork',
+  apiKey,
+}: {
+  text: string;
+  instruction?: 'shorten';
+  channel?: Channel;
+  apiKey?: string;
+}): Promise<{ text: string; message?: string }> {
+  const cleanText = text.trim();
+  if (!cleanText) {
+    throw new Error('Please select or write a proposal to shorten.');
+  }
+
+  let response: Response;
+  try {
+    response = await fetch('/api/refine-pitch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        text: cleanText,
+        instruction,
+        channel,
+        apiKey:
+          apiKey?.trim() ||
+          (typeof window !== 'undefined'
+            ? localStorage.getItem('uppitch_api_key') || ''
+            : ''),
+      }),
+      signal: AbortSignal.timeout(60000),
+    });
+  } catch (fetchErr: unknown) {
+    const err = fetchErr as { name?: string };
+    if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+      throw new Error('This is taking too long. Please try again.');
+    }
+    throw fetchErr;
+  }
+
+  const data = await response.json();
+
+  if (!response.ok) {
+    const errorMsg = data?.error || `Refinement failed (Status ${response.status})`;
+    throw new Error(errorMsg);
+  }
+
+  return {
+    text: data.text || cleanText,
+    message: data.message,
+  };
+}

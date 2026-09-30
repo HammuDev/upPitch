@@ -14,6 +14,7 @@ import {
   Key,
 } from 'lucide-react';
 import { Channel, Tone, FreelancerProfile, GeneratedPitches } from '@/types';
+import { refinePitchWithGemini } from '@/lib/pitchGenerator';
 
 interface OutputPanelProps {
   channel: Channel;
@@ -44,6 +45,7 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
   const [copied, setCopied] = useState(false);
   const [editableVarA, setEditableVarA] = useState('');
   const [editableVarB, setEditableVarB] = useState('');
+  const [isShortening, setIsShortening] = useState(false);
 
   // Sync generated pitches into editable state
   useEffect(() => {
@@ -67,21 +69,24 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
     setTimeout(() => setCopied(false), 2000);
   };
 
-  const handleShorten = () => {
-    if (!currentPitchText) return;
-    const lines = currentPitchText.split('\n');
-    const condensed = lines
-      .filter(
-        (l) =>
-          !l.toLowerCase().includes('furthermore') &&
-          !l.toLowerCase().includes('in addition to that')
-      )
-      .join('\n');
-
-    if (activeTab === 'var-a') {
-      setEditableVarA(condensed);
-    } else {
-      setEditableVarB(condensed);
+  const handleShorten = async () => {
+    if (!currentPitchText || isShortening) return;
+    setIsShortening(true);
+    try {
+      const res = await refinePitchWithGemini({
+        text: currentPitchText,
+        instruction: 'shorten',
+        channel,
+      });
+      if (activeTab === 'var-a') {
+        setEditableVarA(res.text);
+      } else {
+        setEditableVarB(res.text);
+      }
+    } catch (err: unknown) {
+      console.error('Failed to shorten pitch:', err);
+    } finally {
+      setIsShortening(false);
     }
   };
 
@@ -393,10 +398,11 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
                     <button
                       type="button"
                       onClick={handleShorten}
-                      className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 transition-colors"
+                      disabled={isShortening}
+                      className="cursor-pointer inline-flex items-center gap-1 rounded-md border border-slate-200 bg-white px-2.5 py-1 text-[11px] font-medium text-slate-700 hover:bg-slate-50 disabled:opacity-60 transition-colors"
                     >
-                      <Scissors className="h-3 w-3" />
-                      <span>Shorten 30%</span>
+                      <Scissors className={`h-3 w-3 ${isShortening ? 'animate-spin text-indigo-600' : ''}`} />
+                      <span>{isShortening ? 'Shortening...' : 'Shorten 30%'}</span>
                     </button>
                     <button
                       type="button"
