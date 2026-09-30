@@ -71,7 +71,7 @@ export default function PrivacyPage() {
                 3. API Keys (Bring Your Own Key)
               </h2>
               <p>
-                If you configure a custom Gemini API key in Settings, it is saved strictly in your local browser storage. It is only included in the request headers to authenticate your calls directly with Google Gemini.
+                If you configure a custom Gemini API key in Settings, it is saved strictly in your local browser storage. When generating proposals, the key is sent in the request body over encrypted HTTPS to our server, which forwards it to authenticate calls with Google Gemini. Our server does not store or log your API key.
               </p>
             </section>
 

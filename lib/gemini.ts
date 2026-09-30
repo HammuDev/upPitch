@@ -1,3 +1,5 @@
+import { DEFAULT_GEMINI_MODELS } from '@/lib/config';
+
 export class GeminiAuthError extends Error {
   constructor(message = 'No valid Gemini API key configured.') {
     super(message);
@@ -51,8 +53,8 @@ export async function callGemini<T = unknown>({
     throw new GeminiAuthError();
   }
 
-  const primaryModel = process.env.GEMINI_MODEL?.trim() || 'gemini-3.5-flash-lite';
-  const fallbackModel = process.env.GEMINI_FALLBACK_MODEL?.trim() || 'gemini-3.1-flash-lite';
+  const primaryModel = process.env.GEMINI_MODEL?.trim() || DEFAULT_GEMINI_MODELS.primary;
+  const fallbackModel = process.env.GEMINI_FALLBACK_MODEL?.trim() || DEFAULT_GEMINI_MODELS.fallback;
   const candidateModels = Array.from(new Set([primaryModel, fallbackModel])).slice(0, 2);
 
   let lastCategory: '401' | '429' | '502' | '500' = '500';

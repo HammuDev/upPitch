@@ -101,12 +101,12 @@ export const ConversionSection: React.FC = memo(() => {
       </div>
 
       {/* ========================================================= */}
-      {/* 2. ENGINEERED FOR TOP 1% FREELANCERS (6-Grid Horizontal) */}
+      {/* 2. BUILT FOR FREELANCERS, AGENCIES & CONSULTANTS (6-Grid Horizontal) */}
       {/* ========================================================= */}
       <div id="features" className="space-y-10 pt-4 scroll-mt-20">
         <div className="text-center max-w-3xl mx-auto space-y-3">
           <h2 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight leading-tight">
-            Engineered for Top 1% Freelancers, Agencies &amp; Consultants
+            Built for freelancers, agencies and consultants
           </h2>
           <p className="text-sm text-slate-600 max-w-2xl mx-auto leading-relaxed font-normal">
             Everything you need to scale client acquisition across Upwork, LinkedIn, and cold outreach.

@@ -37,9 +37,41 @@ interface RawWriterOutput {
   gaps?: string[];
 }
 
+const ALIAS_MAP: Record<string, string> = {
+  next: 'nextjs',
+  nextjs: 'next',
+  node: 'nodejs',
+  nodejs: 'node',
+  k8s: 'kubernetes',
+  kubernetes: 'k8s',
+  postgres: 'postgresql',
+  postgresql: 'postgres',
+  js: 'javascript',
+  javascript: 'js',
+  ts: 'typescript',
+  typescript: 'ts',
+  ghactions: 'githubactions',
+  githubactions: 'ghactions',
+};
+
+function normalizeToken(token: string): string {
+  if (!token) return '';
+  return token.toLowerCase().replace(/[\s.\-_]+/g, '');
+}
+
+function tokensMatch(tokenA: string, tokenB: string): boolean {
+  const normA = normalizeToken(tokenA);
+  const normB = normalizeToken(tokenB);
+  if (!normA || !normB) return false;
+  if (normA === normB) return true;
+  if (ALIAS_MAP[normA] === normB || ALIAS_MAP[normB] === normA) return true;
+  return false;
+}
+
 /**
  * Ranks selected past projects against the job post and extracted tech stack / deliverables.
- * Only projects with genuine tag overlaps are matched.
+ * Compares whole normalized tokens, ignores 1-character tags, and restricts 2-character
+ * tags strictly to tech_stack and deliverables.
  */
 export function rankProof(
   selectedProjects: ProjectItem[],
@@ -50,9 +82,31 @@ export function rankProof(
     return [];
   }
 
-  const jobWords = jobText.toLowerCase();
-  const techStackLower = (extractedJob.tech_stack || []).map((t) => t.toLowerCase());
-  const deliverablesLower = (extractedJob.deliverables || []).map((d) => d.toLowerCase());
+  const techStackEntries = (extractedJob.tech_stack || [])
+    .map((t) => t.trim())
+    .filter(Boolean);
+  const deliverablesEntries = (extractedJob.deliverables || [])
+    .map((d) => d.trim())
+    .filter(Boolean);
+
+  // Extract whole tokens from jobText prose
+  const proseTokens = (jobText.match(/[a-zA-Z0-9.\-_]+/g) || [])
+    .map((w) => w.trim())
+    .filter(Boolean);
+
+  // Also build 2-gram and 3-gram phrases from prose for multi-word technologies (e.g. "github actions", "tailwind css")
+  const proseNgrams: string[] = [];
+  for (let i = 0; i < proseTokens.length; i++) {
+    proseNgrams.push(proseTokens[i]);
+    if (i + 1 < proseTokens.length) {
+      proseNgrams.push(`${proseTokens[i]} ${proseTokens[i + 1]}`);
+    }
+    if (i + 2 < proseTokens.length) {
+      proseNgrams.push(
+        `${proseTokens[i]} ${proseTokens[i + 1]} ${proseTokens[i + 2]}`
+      );
+    }
+  }
 
   const matched: MatchedProjectWithReason[] = [];
 
@@ -60,19 +114,28 @@ export function rankProof(
     const matchedReasons: string[] = [];
 
     for (const tag of project.tags || []) {
-      const cleanTag = tag.trim().toLowerCase();
-      if (!cleanTag) continue;
+      const cleanTag = tag.trim();
+      const normTag = normalizeToken(cleanTag);
+      if (!normTag || normTag.length < 2) {
+        // Tags of 1 character are ignored
+        continue;
+      }
 
-      // Check if tag overlaps extracted tech stack, deliverables, or the job text
-      const inTechStack = techStackLower.some(
-        (t) => t.includes(cleanTag) || cleanTag.includes(t)
+      // Check tech stack entries
+      const inTechStack = techStackEntries.some((entry) =>
+        tokensMatch(cleanTag, entry)
       );
-      const inDeliverables = deliverablesLower.some(
-        (d) => d.includes(cleanTag) || cleanTag.includes(d)
+
+      // Check deliverables entries
+      const inDeliverables = deliverablesEntries.some((entry) =>
+        tokensMatch(cleanTag, entry)
       );
-      const inJobText =
-        jobWords.includes(cleanTag) ||
-        jobWords.includes(cleanTag.replace(/[^a-z0-9]/g, ' '));
+
+      let inJobText = false;
+      // Tags of 2 characters (e.g. "Go") match ONLY against extracted tech_stack/deliverables, never free prose
+      if (normTag.length > 2) {
+        inJobText = proseNgrams.some((ngram) => tokensMatch(cleanTag, ngram));
+      }
 
       if (inTechStack || inDeliverables || inJobText) {
         matchedReasons.push(tag);
@@ -176,6 +239,7 @@ export async function runPitchPipeline({
     profile,
     matchedProjects: matchedProjectsList,
     extractedJob,
+    screeningAnswers: writerResult?.screeningAnswers,
   });
 
   const issuesVarB = checkProposalQuality({
@@ -185,6 +249,8 @@ export async function runPitchPipeline({
     profile,
     matchedProjects: matchedProjectsList,
     extractedJob,
+    screeningAnswers: writerResult?.screeningAnswers,
+    otherVariation: varA,
   });
 
   const allIssues = Array.from(
@@ -231,6 +297,7 @@ export async function runPitchPipeline({
     profile,
     matchedProjects: matchedProjectsList,
     extractedJob,
+    screeningAnswers: writerResult?.screeningAnswers,
   });
 
   const finalWarnings = Array.from(new Set(finalWarningsVarA)).slice(0, 3);
@@ -251,7 +318,8 @@ export async function runPitchPipeline({
     variationB: varB,
     subjectLine: writerResult?.subjectLine?.trim() || undefined,
     detectedProblems,
-    matchedProject: matchedProjectsList.length > 0 ? matchedProjectsList[0] : undefined,
+    matchedProject:
+      matchedProjectsList.length > 0 ? matchedProjectsList[0] : undefined,
     matchedProjects: matchedProjectsList,
     warnings: finalWarnings.length > 0 ? finalWarnings : undefined,
     gaps,

@@ -45,7 +45,9 @@ export const metadata: Metadata = {
     title: 'UpPitch | AI Upwork Proposal Generator for Freelancers',
     description:
       "Paste an Upwork job post and get two proposal drafts in seconds, each opening with the client's real problem and backed by your own portfolio proof.",
-    creator: '@UpPitchAI',
+    ...(process.env.NEXT_PUBLIC_TWITTER_HANDLE?.trim()
+      ? { creator: process.env.NEXT_PUBLIC_TWITTER_HANDLE.trim() }
+      : {}),
   },
 };
 

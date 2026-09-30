@@ -88,7 +88,7 @@ export const SeoFeatures: React.FC = memo(() => {
       <div className="space-y-4 sm:space-y-6 pt-1">
         <div className="text-center max-w-2xl mx-auto space-y-1.5">
           <h2 className="text-xl sm:text-2xl font-extrabold text-white tracking-tight">
-            Engineered for Top 1% Freelancers, Agencies &amp; Consultants
+            Built for freelancers, agencies and consultants
           </h2>
           <p className="text-xs sm:text-sm text-slate-400 leading-relaxed">
             Everything you need to scale client acquisition across Upwork, LinkedIn, and cold outreach.
