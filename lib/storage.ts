@@ -1,5 +1,4 @@
-import { FreelancerProfile, HistoryItem } from '@/types';
-import { storedProfileSchema, storedHistorySchema } from '@/lib/validate';
+import { FreelancerProfile, HistoryItem, ProjectItem, Channel, Tone } from '@/types';
 
 export const DEFAULT_PROFILE: FreelancerProfile = {
   name: '',
@@ -12,6 +11,60 @@ export const DEFAULT_PROFILE: FreelancerProfile = {
 
 const PROFILE_KEY = 'uppitch_profile_v1';
 const HISTORY_KEY = 'uppitch_history_v1';
+
+const VALID_CHANNELS = new Set<Channel>(['upwork', 'cold-email', 'linkedin', 'twitter']);
+const VALID_TONES = new Set<Tone>(['direct', 'consultative', 'casual']);
+
+export function normalizeStoredProject(item: unknown): ProjectItem {
+  if (!item || typeof item !== 'object') {
+    return {
+      id: 'proj-' + Math.random().toString(36).slice(2, 9),
+      title: 'Untitled Project',
+      metricOrLink: '',
+      tags: [],
+    };
+  }
+  const obj = item as Record<string, unknown>;
+  const tags = Array.isArray(obj.tags)
+    ? obj.tags
+        .filter((t): t is string => typeof t === 'string' && t.trim().length > 0)
+        .map((t) => t.trim())
+    : [];
+
+  return {
+    id:
+      typeof obj.id === 'string' && obj.id.trim()
+        ? obj.id.trim()
+        : 'proj-' + Math.random().toString(36).slice(2, 9),
+    title:
+      typeof obj.title === 'string' && obj.title.trim()
+        ? obj.title.trim()
+        : 'Untitled Project',
+    metricOrLink:
+      typeof obj.metricOrLink === 'string' ? obj.metricOrLink.trim() : '',
+    tags,
+    ...(typeof obj.link === 'string' && obj.link.trim()
+      ? { link: obj.link.trim() }
+      : {}),
+  };
+}
+
+export function normalizeStoredProfile(data: unknown): FreelancerProfile {
+  if (!data || typeof data !== 'object') return DEFAULT_PROFILE;
+  const obj = data as Record<string, unknown>;
+
+  const rawProjects = Array.isArray(obj.projects) ? obj.projects : [];
+  const projects: ProjectItem[] = rawProjects.map(normalizeStoredProject);
+
+  return {
+    name: typeof obj.name === 'string' ? obj.name.trim() : '',
+    role: typeof obj.role === 'string' ? obj.role.trim() : '',
+    bio: typeof obj.bio === 'string' ? obj.bio.trim() : '',
+    experience: typeof obj.experience === 'string' ? obj.experience.trim() : '',
+    defaultCta: typeof obj.defaultCta === 'string' ? obj.defaultCta.trim() : '',
+    projects,
+  };
+}
 
 /**
  * Migrates legacy history items (which only had pitchText) so both
@@ -27,8 +80,8 @@ export function migrateHistoryItem(
   return {
     id: item.id || `hist-${Date.now()}`,
     timestamp: item.timestamp || new Date().toISOString(),
-    channel: item.channel || 'upwork',
-    tone: item.tone || 'direct',
+    channel: item.channel && VALID_CHANNELS.has(item.channel) ? item.channel : 'upwork',
+    tone: item.tone && VALID_TONES.has(item.tone) ? item.tone : 'direct',
     variationName: item.variationName || 'Variation A (Direct)',
     pitchText: pitchA,
     pitchTextB: pitchB,
@@ -43,12 +96,7 @@ export function getStoredProfile(): FreelancerProfile {
     const raw = localStorage.getItem(PROFILE_KEY);
     if (!raw) return DEFAULT_PROFILE;
     const parsed = JSON.parse(raw);
-    const result = storedProfileSchema.safeParse(parsed);
-    if (result.success) {
-      return result.data;
-    }
-    console.warn('Invalid profile structure in localStorage, falling back to default');
-    return DEFAULT_PROFILE;
+    return normalizeStoredProfile(parsed);
   } catch (e) {
     console.error('Failed to load profile:', e);
     return DEFAULT_PROFILE;
@@ -70,12 +118,10 @@ export function getStoredHistory(): HistoryItem[] {
     const raw = localStorage.getItem(HISTORY_KEY);
     if (!raw) return [];
     const parsed = JSON.parse(raw);
-    const result = storedHistorySchema.safeParse(parsed);
-    if (result.success) {
-      return (result.data as HistoryItem[]).map((item) => migrateHistoryItem(item));
-    }
-    console.warn('Invalid history structure in localStorage, falling back to empty list');
-    return [];
+    if (!Array.isArray(parsed)) return [];
+    return parsed
+      .filter((item): item is Record<string, unknown> => Boolean(item && typeof item === 'object'))
+      .map((item) => migrateHistoryItem(item as Partial<HistoryItem>));
   } catch {
     return [];
   }

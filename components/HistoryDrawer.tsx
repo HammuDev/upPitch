@@ -77,7 +77,8 @@ export const HistoryDrawer: React.FC<HistoryDrawerProps> = React.memo(({
               <button
                 type="button"
                 onClick={onClose}
-                className="cursor-pointer rounded-lg p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100"
+                className="cursor-pointer rounded-lg p-1 text-slate-400 hover:text-slate-700 hover:bg-slate-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30"
+                aria-label="Close history drawer"
               >
                 <X className="h-4 w-4" />
               </button>

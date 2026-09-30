@@ -20,24 +20,34 @@ export async function generatePitchWithGemini({
     throw new Error('Please paste a job description first.');
   }
 
-  const response = await fetch('/api/generate-pitch', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-    body: JSON.stringify({
-      jobText: jobDescription,
-      profile,
-      selectedProjects,
-      channel,
-      tone,
-      apiKey:
-        apiKey?.trim() ||
-        (typeof window !== 'undefined'
-          ? localStorage.getItem('uppitch_api_key') || ''
-          : ''),
-    }),
-  });
+  let response: Response;
+  try {
+    response = await fetch('/api/generate-pitch', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        jobText: jobDescription,
+        profile,
+        selectedProjects,
+        channel,
+        tone,
+        apiKey:
+          apiKey?.trim() ||
+          (typeof window !== 'undefined'
+            ? localStorage.getItem('uppitch_api_key') || ''
+            : ''),
+      }),
+      signal: AbortSignal.timeout(60000),
+    });
+  } catch (fetchErr: unknown) {
+    const err = fetchErr as { name?: string };
+    if (err?.name === 'TimeoutError' || err?.name === 'AbortError') {
+      throw new Error('This is taking too long. Please try again.');
+    }
+    throw fetchErr;
+  }
 
   const data = await response.json();
 

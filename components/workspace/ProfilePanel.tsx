@@ -168,16 +168,18 @@ export const ProfilePanel: React.FC<ProfilePanelProps> = React.memo(({
                           <button
                             type="button"
                             onClick={() => onOpenEditProject(proj)}
-                            className="cursor-pointer p-1 text-slate-400 hover:text-indigo-600 hover:bg-white rounded transition-colors"
+                            className="cursor-pointer p-1 text-slate-400 hover:text-indigo-600 hover:bg-white rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30"
                             title="Edit project details & skills"
+                            aria-label={`Edit project ${proj.title}`}
                           >
                             <Pencil className="h-3.5 w-3.5" />
                           </button>
                           <button
                             type="button"
                             onClick={() => onDeleteProject(proj.id)}
-                            className="cursor-pointer p-1 text-slate-400 hover:text-rose-600 hover:bg-white rounded transition-colors"
+                            className="cursor-pointer p-1 text-slate-400 hover:text-rose-600 hover:bg-white rounded transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/30"
                             title="Delete project"
+                            aria-label={`Delete project ${proj.title}`}
                           >
                             <Trash2 className="h-3.5 w-3.5" />
                           </button>

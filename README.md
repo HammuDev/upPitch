@@ -107,11 +107,33 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | Variable | Required | Description | Default |
 | :--- | :---: | :--- | :--- |
 | `GEMINI_API_KEY` | Yes (Server) | Server-side Google Gemini API key. Optional if user brings own key in UI. | `undefined` |
-| `GEMINI_MODEL` | No | Primary Gemini model ID for extraction and proposal synthesis. | `gemini-1.5-flash` |
-| `GEMINI_FALLBACK_MODEL` | No | Fallback Gemini model invoked if primary hits rate limits or 5xx. | `gemini-1.5-flash-8b` |
+| `GEMINI_MODEL` | No | Primary Gemini model ID for extraction and proposal synthesis. | `DEFAULT_GEMINI_MODELS.primary` |
+| `GEMINI_FALLBACK_MODEL` | No | Fallback Gemini model invoked if primary hits rate limits or 5xx. | `DEFAULT_GEMINI_MODELS.fallback` |
+| `RATE_LIMIT_SERVER_PER_HOUR` | No | Maximum generation requests per hour per IP for server key. | `10` |
+| `RATE_LIMIT_BYOK_PER_HOUR` | No | Maximum generation requests per hour per IP for BYOK users. | `30` |
 | `UPSTASH_REDIS_REST_URL` | No | Upstash Redis REST URL for distributed rate limiting. | `undefined` (in-memory) |
 | `UPSTASH_REDIS_REST_TOKEN`| No | Upstash Redis REST token for rate limiting authentication. | `undefined` |
 | `NEXT_PUBLIC_SITE_URL` | No | Canonical public domain used for sitemap, robots, and OpenGraph. | `https://uppitch.vercel.app` |
+| `NEXT_PUBLIC_TWITTER_HANDLE` | No | Optional Twitter/X creator handle for social graph metadata. | `undefined` |
+
+---
+
+## 📊 Operations & Observability
+
+Every proposal generation request logs a single structured JSON line with token costs and performance metrics. To maintain strict user privacy, **no job brief text, profile data, or API keys are ever logged**:
+
+```json
+{
+  "promptVersion": "v3",
+  "channel": "upwork",
+  "calls": 2,
+  "promptTokenCount": 1450,
+  "candidatesTokenCount": 520,
+  "totalTokenCount": 1970,
+  "retryUsed": false,
+  "durationMs": 1842
+}
+```
 
 ---
 
@@ -122,7 +144,7 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 | `npm run dev` | Runs the Next.js local development server on port 3000. |
 | `npm run build` | Compiles the production build with typechecking and static page generation. |
 | `npm run start` | Starts the production server. |
-| `npm run lint` | Runs ESLint checks using `next/core-web-vitals` rules. |
+| `npm run lint` | Runs ESLint checks using Next.js rules. |
 | `npm run typecheck`| Runs TypeScript compiler type verification (`tsc --noEmit`). |
 | `npm test` | Runs the Vitest unit test suite. |
 
@@ -132,10 +154,10 @@ Open [http://localhost:3000](http://localhost:3000) in your browser.
 
 - **Zero Database Persistence**: UpPitch does not store job postings, proposals, or freelancer profiles in any database.
 - **Client-Side Storage**: Profile details, project case studies, and generation history remain stored locally on your device in browser `localStorage`.
-- **Bring-Your-Own-Key (BYOK)**: Custom Gemini API keys entered into Settings remain in local browser storage and are only sent in encrypted HTTPS headers during generation calls.
-- **Strict Input Validation**: All incoming API requests are validated and sanitized via Zod to prevent prompt injection and payload flooding.
-- **Abuse Prevention**: Sliding-window rate limiting protects the API route against spam and denial-of-service attempts.
-- **Hardened HTTP Headers**: Production responses enforce strict Content Security Policy (`CSP`), `HSTS`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, and privacy-preserving `Referrer-Policy`.
+- **Bring-Your-Own-Key (BYOK)**: Custom Gemini API keys entered in Settings remain in local browser storage and are transmitted in encrypted HTTPS request bodies directly to our server to authenticate calls with Google Gemini. Keys are never logged or persisted.
+- **Strict Input Validation**: All incoming API requests are validated and sanitized server-side via Zod to prevent prompt injection and payload flooding.
+- **Abuse Prevention**: Sliding-window rate limiting protects the API route against spam with automatic graceful fallback from Upstash Redis to in-memory tracking.
+- **Hardened HTTP Headers**: Production responses enforce `HSTS`, `X-Content-Type-Options: nosniff`, `X-Frame-Options: DENY`, `Referrer-Policy`, and `Content-Security-Policy-Report-Only`.
 
 ---
 

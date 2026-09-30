@@ -73,7 +73,8 @@ export const AddProjectModal: React.FC<AddProjectModalProps> = React.memo(({
           <button
             type="button"
             onClick={onClose}
-            className="cursor-pointer text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1.5 transition-colors"
+            className="cursor-pointer text-slate-400 hover:text-slate-700 hover:bg-slate-100 rounded-lg p-1.5 transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30"
+            aria-label="Close add project modal"
           >
             <X className="h-4 w-4" />
           </button>

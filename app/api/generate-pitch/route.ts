@@ -2,13 +2,16 @@ import { NextRequest, NextResponse } from 'next/server';
 import { generatePitchSchema } from '@/lib/validate';
 import { checkRateLimit } from '@/lib/ratelimit';
 import { runPitchPipeline } from '@/lib/generate';
+import { PROMPT_VERSION } from '@/lib/prompts';
 import {
   GeminiAuthError,
+  GeminiBlockedContentError,
   GeminiRateLimitError,
   GeminiServiceError,
 } from '@/lib/gemini';
 
 export async function POST(req: NextRequest) {
+  const startTime = Date.now();
   try {
     let body: unknown;
     try {
@@ -17,7 +20,7 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
     }
 
-    // 1. Strict Payload Validation with Zod
+    // 1. Strict Payload Validation with Zod (Server-only)
     const validation = generatePitchSchema.safeParse(body);
     if (!validation.success) {
       return NextResponse.json({ error: 'Invalid request.' }, { status: 400 });
@@ -68,12 +71,44 @@ export async function POST(req: NextRequest) {
         geminiKey,
       });
 
+      // Empty-output guard: if both variations are empty after trimming, return 502
+      if (!result.variationA?.trim() && !result.variationB?.trim()) {
+        return NextResponse.json(
+          { error: 'AI service error. Please try again.' },
+          { status: 502 }
+        );
+      }
+
+      // Cost & Operations Visibility: Log ONE structured server line per request (never log content/keys)
+      const durationMs = Date.now() - startTime;
+      console.log(
+        JSON.stringify({
+          promptVersion: PROMPT_VERSION,
+          channel,
+          calls: result.metrics?.calls ?? 1,
+          promptTokenCount: result.metrics?.promptTokens ?? 0,
+          candidatesTokenCount: result.metrics?.candidateTokens ?? 0,
+          totalTokenCount: result.metrics?.totalTokens ?? 0,
+          retryUsed: result.metrics?.retryUsed ?? false,
+          durationMs,
+        })
+      );
+
       return NextResponse.json(result);
     } catch (pipelineErr: unknown) {
       if (pipelineErr instanceof GeminiAuthError) {
         return NextResponse.json(
           { error: 'No valid Gemini API key configured.' },
           { status: 401 }
+        );
+      }
+      if (pipelineErr instanceof GeminiBlockedContentError) {
+        return NextResponse.json(
+          {
+            error:
+              'The AI could not process this job post. Try editing the text and generating again.',
+          },
+          { status: 422 }
         );
       }
       if (pipelineErr instanceof GeminiRateLimitError) {

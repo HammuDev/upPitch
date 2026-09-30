@@ -135,7 +135,10 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
       className="lg:col-span-7 space-y-3 sm:space-y-4 lg:sticky lg:top-20 lg:self-start transition-all"
       aria-label="Generated Proposal Output"
     >
-      <div className="rounded-2xl border border-indigo-100/90 bg-white p-4 sm:p-5 shadow-2xl shadow-indigo-500/8 space-y-4 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between">
+      <div
+        aria-live="polite"
+        className="rounded-2xl border border-indigo-100/90 bg-white p-4 sm:p-5 shadow-2xl shadow-indigo-500/8 space-y-4 min-h-[460px] sm:min-h-[490px] flex flex-col justify-between"
+      >
         <div>
           {/* Top Tab Bar inside Card */}
           <div className="grid grid-cols-3 gap-1 sm:gap-1.5 border-b border-slate-200 pb-3">
@@ -148,7 +151,7 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
                 key={t.id}
                 type="button"
                 onClick={() => setActiveTab(t.id as 'var-a' | 'var-b' | 'portfolio')}
-                className={`cursor-pointer rounded-lg py-1.5 sm:py-2 px-1 sm:px-2.5 text-center text-xs font-semibold transition-all duration-200 ${
+                className={`cursor-pointer rounded-lg py-1.5 sm:py-2 px-1 sm:px-2.5 text-center text-xs font-semibold transition-all duration-200 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/30 ${
                   activeTab === t.id
                     ? 'bg-indigo-600 text-white shadow-xs scale-[1.01]'
                     : 'text-slate-600 hover:text-slate-900 hover:bg-slate-100'
@@ -162,7 +165,10 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
 
           {/* Error Alert Box */}
           {errorMessage && (
-            <div className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 sm:p-3.5 space-y-2 animate-fade-in-up">
+            <div
+              role="alert"
+              className="mt-3 rounded-xl border border-rose-200 bg-rose-50 p-3 sm:p-3.5 space-y-2 animate-fade-in-up"
+            >
               <div className="flex items-center gap-2 text-rose-700 font-bold text-xs">
                 <AlertCircle className="h-4 w-4 shrink-0 text-rose-600" />
                 <span>Proposal Generation Notice</span>
@@ -174,7 +180,7 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
                 <button
                   type="button"
                   onClick={onOpenSettings}
-                  className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 px-3 py-1 text-xs font-bold text-white shadow-xs transition-all hover:scale-[1.02]"
+                  className="cursor-pointer inline-flex items-center gap-1.5 rounded-lg bg-rose-600 hover:bg-rose-700 px-3 py-1 text-xs font-bold text-white shadow-xs transition-all hover:scale-[1.02] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-rose-500/40"
                 >
                   <Key className="h-3 w-3" />
                   <span>Configure Gemini API Key in Settings</span>
@@ -473,7 +479,7 @@ export const OutputPanel: React.FC<OutputPanelProps> = React.memo(({
                     setEditableVarB(e.target.value);
                   }
                 }}
-                className="cursor-text w-full bg-slate-50/80 border border-slate-200 rounded-xl p-3.5 sm:p-4 text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:bg-white focus:outline-none focus:border-indigo-500 resize-y font-normal"
+                className="cursor-text w-full bg-slate-50/80 border border-slate-200 rounded-xl p-3.5 sm:p-4 text-xs sm:text-[13px] text-slate-900 leading-relaxed focus:bg-white focus:outline-none focus-visible:ring-2 focus-visible:ring-indigo-500/20 focus-visible:border-indigo-500 resize-y font-normal"
               />
 
               {/* Subtle Notice if No Project Proof Matched */}

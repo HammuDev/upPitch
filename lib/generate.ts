@@ -26,6 +26,13 @@ export interface GenerationPipelineOutput {
   matchedProjects: ProjectItem[];
   warnings?: string[];
   gaps?: string[];
+  metrics?: {
+    calls: number;
+    promptTokens: number;
+    candidateTokens: number;
+    totalTokens: number;
+    retryUsed: boolean;
+  };
 }
 
 interface RawWriterOutput {
@@ -169,12 +176,30 @@ export async function runPitchPipeline({
   tone,
   geminiKey,
 }: GenerationPipelineInput): Promise<GenerationPipelineOutput> {
+  let promptTokens = 0;
+  let candidateTokens = 0;
+  let totalTokens = 0;
+  let calls = 0;
+  let retryUsed = false;
+
+  const trackUsage = (usage: {
+    promptTokenCount: number;
+    candidatesTokenCount: number;
+    totalTokenCount: number;
+  }) => {
+    promptTokens += usage.promptTokenCount;
+    candidateTokens += usage.candidatesTokenCount;
+    totalTokens += usage.totalTokenCount;
+  };
+
   // Step 1: Extraction (AI Call #1, Low Temp)
+  calls++;
   const extractionPrompt = buildExtractionPrompt(jobText);
   const rawExtraction = await callGemini<Partial<ExtractedJob>>({
     apiKey: geminiKey,
     prompt: extractionPrompt,
     temperature: 0.1,
+    onUsage: trackUsage,
   });
 
   const extractedJob: ExtractedJob = {
@@ -213,6 +238,7 @@ export async function runPitchPipeline({
   const matchedProjectsList = matchedProjectsWithReason.map((m) => m.project);
 
   // Step 3: Write Step (AI Call #2)
+  calls++;
   const writerPrompt = buildWriterPrompt({
     extractedJob,
     jobText,
@@ -226,6 +252,7 @@ export async function runPitchPipeline({
     apiKey: geminiKey,
     prompt: writerPrompt,
     temperature: 0.7,
+    onUsage: trackUsage,
   });
 
   // Step 4: Quality Checks (Pure Code)
@@ -263,6 +290,8 @@ export async function runPitchPipeline({
   // Step 5: Retry Once if check issues exist (AI Call #3 Max)
   if (allIssues.length > 0) {
     try {
+      retryUsed = true;
+      calls++;
       const retryPrompt = buildWriterPrompt({
         extractedJob,
         jobText,
@@ -277,6 +306,7 @@ export async function runPitchPipeline({
         apiKey: geminiKey,
         prompt: retryPrompt,
         temperature: 0.6,
+        onUsage: trackUsage,
       });
 
       if (refinedResult?.variationA && refinedResult?.variationB) {
@@ -323,5 +353,12 @@ export async function runPitchPipeline({
     matchedProjects: matchedProjectsList,
     warnings: finalWarnings.length > 0 ? finalWarnings : undefined,
     gaps,
+    metrics: {
+      calls,
+      promptTokens,
+      candidateTokens,
+      totalTokens,
+      retryUsed,
+    },
   };
 }

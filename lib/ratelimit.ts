@@ -1,7 +1,7 @@
 import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 
-interface RateLimitResult {
+export interface RateLimitResult {
   success: boolean;
   limit: number;
   remaining: number;
@@ -22,6 +22,24 @@ const inMemoryStore = new Map<string, InMemoryRecord>();
 
 const ONE_HOUR_MS = 60 * 60 * 1000;
 
+function getServerLimit(): number {
+  const envVal = process.env.RATE_LIMIT_SERVER_PER_HOUR?.trim();
+  if (envVal) {
+    const parsed = parseInt(envVal, 10);
+    if (!isNaN(parsed) && parsed > 0) return parsed;
+  }
+  return 10;
+}
+
+function getByokLimit(): number {
+  const envVal = process.env.RATE_LIMIT_BYOK_PER_HOUR?.trim();
+  if (envVal) {
+    const parsed = parseInt(envVal, 10);
+    if (!isNaN(parsed) && parsed > 0) return parsed;
+  }
+  return 30;
+}
+
 function initUpstashLimiters() {
   const url = process.env.UPSTASH_REDIS_REST_URL?.trim();
   const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim();
@@ -31,19 +49,45 @@ function initUpstashLimiters() {
       redisClient = new Redis({ url, token });
       serverKeyLimiter = new Ratelimit({
         redis: redisClient,
-        limiter: Ratelimit.slidingWindow(5, '1 h'),
+        limiter: Ratelimit.slidingWindow(getServerLimit(), '1 h'),
         prefix: 'uppitch_rl_server',
       });
       customKeyLimiter = new Ratelimit({
         redis: redisClient,
-        limiter: Ratelimit.slidingWindow(30, '1 h'),
+        limiter: Ratelimit.slidingWindow(getByokLimit(), '1 h'),
         prefix: 'uppitch_rl_custom',
       });
     } catch (e) {
-      console.error('Failed to initialize Upstash Redis rate limiter:', e);
+      console.warn('Failed to initialize Upstash Redis rate limiter:', e);
       redisClient = null;
+      serverKeyLimiter = null;
+      customKeyLimiter = null;
     }
   }
+}
+
+/**
+ * Periodically evicts expired records if the in-memory map exceeds 1,000 entries.
+ */
+function purgeExpiredInMemoryEntries(now: number): void {
+  if (inMemoryStore.size > 1000) {
+    for (const [key, record] of inMemoryStore.entries()) {
+      if (now > record.resetTime) {
+        inMemoryStore.delete(key);
+      }
+    }
+  }
+}
+
+/**
+ * Resets in-memory store for testing environments.
+ */
+export function resetInMemoryRateLimiterForTesting(): void {
+  inMemoryStore.clear();
+  warnedInMemoryFallback = false;
+  redisClient = null;
+  serverKeyLimiter = null;
+  customKeyLimiter = null;
 }
 
 export async function checkRateLimit(
@@ -53,18 +97,25 @@ export async function checkRateLimit(
   initUpstashLimiters();
 
   if (redisClient && serverKeyLimiter && customKeyLimiter) {
-    const limiter = hasCustomApiKey ? customKeyLimiter : serverKeyLimiter;
-    const result = await limiter.limit(ip);
-    return {
-      success: result.success,
-      limit: result.limit,
-      remaining: result.remaining,
-      reset: result.reset,
-    };
+    try {
+      const limiter = hasCustomApiKey ? customKeyLimiter : serverKeyLimiter;
+      const result = await limiter.limit(ip);
+      return {
+        success: result.success,
+        limit: result.limit,
+        remaining: result.remaining,
+        reset: result.reset,
+      };
+    } catch (upstashErr) {
+      console.warn(
+        'Upstash rate limiter execution failed, falling back to in-memory rate limiting:',
+        upstashErr
+      );
+    }
   }
 
   // In-Memory Fallback
-  if (!warnedInMemoryFallback) {
+  if (!warnedInMemoryFallback && !process.env.UPSTASH_REDIS_REST_URL) {
     console.warn(
       'Warning: UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN are not configured. Falling back to in-memory rate limiting (per-instance only).'
     );
@@ -72,7 +123,9 @@ export async function checkRateLimit(
   }
 
   const now = Date.now();
-  const maxLimit = hasCustomApiKey ? 30 : 5;
+  purgeExpiredInMemoryEntries(now);
+
+  const maxLimit = hasCustomApiKey ? getByokLimit() : getServerLimit();
   const storeKey = `${hasCustomApiKey ? 'custom' : 'server'}:${ip}`;
 
   const record = inMemoryStore.get(storeKey);
